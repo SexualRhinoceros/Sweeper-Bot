@@ -11,6 +11,7 @@
 		"logChannelId": "Channel ID",
 		"botDMServerId": "Seprate Server ID",
 		"baseVoiceChannelIdOne": "Channel ID",
-		"baseVoiceChannelIdTwo": "Channel ID"
+		"baseVoiceChannelIdTwo": "Channel ID",
+		"baseVoiceChannelIdThree": "Channel ID"
 	}
 }

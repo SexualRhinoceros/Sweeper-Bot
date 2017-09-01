@@ -18,21 +18,24 @@ export default class VoiceChannelManager {
 		let _this: VoiceChannelManager = this;
 		const guild: Guild = <Guild> this.client.guilds.get(Constants.serverId);
 
-		this.logger.log('VoiceChannelManager', `Curation Task Started.`);
+		await _this.curateChannels(guild);
+
 		await Schedule.scheduleJob('*/1 * * * *', async function() {
 			await _this.curateChannels(guild);
 		});
+
+		this.logger.log('VoiceChannelManager', `Curation Task Started.`);
 	}
 
 	public async curateChannels(guild: Guild): Promise<void> {
-		let emptyChannels: Array<VoiceChannel> = this.getEmptyChannels(guild).map((channel: VoiceChannel) => { return channel; });
-		let baseChannelOneHasUsers: boolean = ((guild.channels.find('id', Constants.baseVoiceChannelIdOne) as VoiceChannel).members.size > 0) ? true : false;
-		let baseChannelTwoHasUsers: boolean = ((guild.channels.find('id', Constants.baseVoiceChannelIdTwo) as VoiceChannel).members.size > 0) ? true : false;
-		let channelsToDelete: number = (baseChannelOneHasUsers && baseChannelTwoHasUsers) ? emptyChannels.length - 1 : emptyChannels.length;
+		let emptyChannels: Array<VoiceChannel> = this.getEmptyVoiceChannels(guild).map((channel: VoiceChannel) => { return channel; });
+		let channelsForDeletion: Array<VoiceChannel> = this.getChannelsForDeletion(guild).map((channel: VoiceChannel) => { return channel; });
 
-		for (let x: number = 0; x < channelsToDelete; x++) {
-			emptyChannels[x].delete();
-			this.logger.log('VoiceChannelManager', `Deleted Voice Channel: ${emptyChannels[x].name}.`);
+		for (let x: number = 0; x < channelsForDeletion.length; x++) {
+			if (emptyChannels.length > 3) {
+				await channelsForDeletion[x].delete();
+				this.logger.log('VoiceChannelManager', `Deleted Voice Channel: ${channelsForDeletion[x].name}.`);
+			}
 		}
 	}
 
@@ -40,21 +43,37 @@ export default class VoiceChannelManager {
 		let baseChannelOne: VoiceChannel = member.guild.channels.find('id', Constants.baseVoiceChannelIdOne) as VoiceChannel;
 		let channelName: string = this.getChannelName();
 		let currentChannelNames: Array<string> = this.getCurrentChannelNames(member.guild);
-		let position: number = this.getUsedChannelsCount(member.guild) + 1;
+		let fireTeamSize: number = 6;
 
 		do { channelName = this.getChannelName(); }
 		while (currentChannelNames.indexOf(channelName) !== -1);
 
 		let newChannel: VoiceChannel = await baseChannelOne.clone(channelName, true, true) as VoiceChannel;
 
-		await newChannel.setPosition(position);
-		await newChannel.setUserLimit(6);
-		this.logger.log('VoiceChannelManager', `Created Voice Channel: ${newChannel.name}.`);
+		await newChannel.setPosition(0);
+		await newChannel.setUserLimit(fireTeamSize);
+
+		this.logger.log('VoiceChannelManager', `Created Voice Channel: ${channelName}.`);
 	}
 
-	public getEmptyChannels(guild: Guild): Collection<string, GuildChannel> {
+	public getChannelsForDeletion(guild: Guild): Collection<string, GuildChannel> {
 		return guild.channels.filter((channel: VoiceChannel, key: string, collection: Collection<string, VoiceChannel>) => {
-			return ((channel.type === 'voice' && channel.name.startsWith('Fireteam ')) && channel.members.size === 0 && (channel.id !== Constants.baseVoiceChannelIdOne && channel.id !== Constants.baseVoiceChannelIdTwo)) ? true : false;
+			return (
+				channel.type === 'voice' &&
+				channel.members.size === 0 &&
+				channel.name.startsWith('Fireteam ') &&
+				channel.id !== Constants.baseVoiceChannelIdOne &&
+				channel.id !== Constants.baseVoiceChannelIdTwo &&
+				channel.id !== Constants.baseVoiceChannelIdThree) ? true : false;
+		});
+	}
+
+	public getEmptyVoiceChannels(guild: Guild): Collection<string, GuildChannel> {
+		return guild.channels.filter((channel: VoiceChannel, key: string, collection: Collection<string, VoiceChannel>) => {
+			return (
+				channel.type === 'voice' &&
+				channel.members.size === 0 &&
+				channel.name.startsWith('Fireteam ')) ? true : false;
 		});
 	}
 
