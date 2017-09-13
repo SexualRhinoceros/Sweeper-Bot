@@ -93,7 +93,14 @@ export default class Mute extends Command<SweeperClient> {
 
 			this.client.mod.actions.unmute(mutedUser, issuer, message.guild)
 				.then(result => {
-					message.delete();
+					// If message sent in the mod channel, then give full details, otherwise be vague
+					if (message.channel.id === Constants.modChannelId) {
+						message.channel.send(`Successfully unmuted <@${user.id}> for **${muteTimeHUMN}**.`);
+					} else {
+						message.channel.send(`That action was successful.`);
+						message.delete();
+					}
+
 					this.logger.log('CMD Unmute', `Unmuted user: '${mutedUser.user.tag}' in '${message.guild.name}'`);
 					return user.send(`You have been unmuted on ${message.guild.name}. You may now send messages.`);
 				})

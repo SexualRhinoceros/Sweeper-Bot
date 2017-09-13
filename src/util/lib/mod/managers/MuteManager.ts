@@ -136,8 +136,10 @@ export class MuteManager
 				if (!await this.isExpired(member)) continue;
 				if (await this.isEvasionFlagged(member)) continue;
 
+				let issuer: GuildMember = await guild.fetchMember(this._client.user);
+
 				await this.remove(member);
-				await member.removeRoles([mutedRole]);
+				this._client.mod.actions.unmute(member, issuer, guild);
 				this.logger.log('MuteManager', `Removed expired mute: '${member.user.tag}' in '${guild.name}'`);
 				member.send(`Your mute on ${guild.name} has been lifted. You may now send messages.`);
 			}

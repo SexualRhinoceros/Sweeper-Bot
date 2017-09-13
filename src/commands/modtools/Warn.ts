@@ -117,16 +117,19 @@ export default class Mute extends Command<SweeperClient> {
 					})
 					.catch((err) => {
 						const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
-						modChannel.send(`There was an error informing ${gmUser.user.tag} of their warning. Their DMs may be disabled.\n\n**Error:**\n${err}`);
+						modChannel.send(`There was an error informing ${gmUser.user.tag} (${user.id}) of their warning. Their DMs may be disabled.\n\n**Error:**\n${err}`);
 						this.logger.log('CMD Warn', `Unable to warn user: '${gmUser.user.tag}' in '${message.guild.name}'`);
 						throw new Error(err);
 					});
 
+				// If message sent in the mod channel, then give full details, otherwise be vague
 				let msgSuccess: Message;
-				msgSuccess = <Message> await message.channel.send('That action was successful.');
-				if (msgSuccess && (message.channel.id !== Constants.modChannelId)) {
+				if (message.channel.id === Constants.modChannelId) {
+					msgSuccess = <Message> await message.channel.send(`Warned <@${user.id}>.`);
+				} else {
+					msgSuccess = <Message> await message.channel.send(`That action was successful.`);
 					await new Promise((r: any) => setTimeout(r, 5000));
-					return msgSuccess.delete();
+					msgSuccess.delete();
 				}
 
 			} catch (err) {
