@@ -1,0 +1,24 @@
+{
+	"token": " bot token ",
+	"owner": [" owner id "],
+	"name": "Sweeper Bot",
+	"version": "0.1.0",
+	"status": "Try .help",
+	"ServerData": {
+		"assignmentChannelId": "Channel ID",
+		"serverId": "Server ID",
+		"modChannelId": "Channel ID",
+		"logChannelId": "Channel ID",
+		"botDMServerId": "Seprate Server ID",
+		"baseVoiceChannelIdOne": "Channel ID",
+		"baseVoiceChannelIdTwo": "Channel ID",
+		"baseVoiceChannelIdThree": "Channel ID"
+	},
+	"DatabaseConnectionString": {
+		"user": "username",
+		"password": "password",
+		"host": "localhost",
+		"port": 5432,
+		"database": "database"
+	}
+}
