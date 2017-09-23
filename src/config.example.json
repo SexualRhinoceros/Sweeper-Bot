@@ -3,7 +3,7 @@
 	"owner": [" owner id "],
 	"name": "Sweeper Bot",
 	"version": "0.1.0",
-	"status": "Try .help",
+	"status": "Try .help | DMing me DMs the mods",
 	"ServerData": {
 		"assignmentChannelId": "Channel ID",
 		"serverId": "Server ID",
