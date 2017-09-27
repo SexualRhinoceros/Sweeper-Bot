@@ -268,7 +268,7 @@ export class Events {
 
 		// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators | PROD
 		// 362039223588487178 = test | DEV
-		if (roles.includes('362039223588487178') || roles.includes('157728857263308800') || roles.includes('302255737302679552')) {
+		if (roles.includes('362039223588487178') || roles.includes('157728857263308800') || roles.includes('302255737302679552') || user.bot) {
 			return;
 		} else if (Constants.discordInviteRegExp.test(message.content)) {
 			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
