@@ -37,7 +37,10 @@ export class Events {
 
 		// 296023718839451649 == @Charlemagne#3214
 		// 294882584201003009 == @GiveawayBot#2381
-		if (user.bot && (user.id !== '296023718839451649' || user.id !== '294882584201003009' || user.id !== this._client.user.id))
+		if (user.id === '296023718839451649' || user.id === '294882584201003009')
+			return;
+
+		if (user.bot)
 			return reaction.remove(user);
 
 		const reactionAuthor: GuildMember = await reaction.message.guild.fetchMember(user);
