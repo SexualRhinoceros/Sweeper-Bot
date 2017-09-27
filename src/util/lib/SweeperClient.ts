@@ -1,4 +1,4 @@
-import { Client, ListenerUtil } from 'yamdbf';
+import { Client, ListenerUtil, Logger, logger } from 'yamdbf';
 import { TextChannel, RichEmbed, Message, Guild, GuildMember, VoiceChannel } from 'discord.js';
 import { Events } from './listeners/Events';
 import { RoleManager } from './assignment/RoleManager';
@@ -12,6 +12,8 @@ const credentials: any = require('../../database.json');
 const { once } = ListenerUtil;
 
 export class SweeperClient extends Client {
+	@logger private readonly logger: Logger;
+
 	// properties
 	public config: any;
 	public events: any;
@@ -46,9 +48,11 @@ export class SweeperClient extends Client {
 		});
 
 		this.config = config;
-		this.events = new Events(this);
-		this.roleManager = new RoleManager(this);
 		this.database = new Database(credentials);
+		this.logger.info('CORE', `Connected to: Database`);
+		this.events = new Events(this);
+		this.logger.info('CORE', `Connected to: Events`);
+		this.roleManager = new RoleManager(this);
 		this.mod = new ModLoader(this);
 		this.voiceChannelManager = new VoiceChannelManager(this);
 	}
@@ -63,8 +67,11 @@ export class SweeperClient extends Client {
 	private async _onClientReady(): Promise<void>
 	{
 		await this.mod.init();
+		this.logger.info('CORE', `Connected to: ModLoader`);
 		await this.roleManager.init();
+		this.logger.info('CORE', `Connected to: RoleManager`);
 		await this.voiceChannelManager.init();
+		this.logger.info('CORE', `Connected to: VoiceChannelManager`);
 	}
 
 	@once('disconnect')

@@ -32,7 +32,7 @@
     "pg": "7.1.2",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "sequelize": "^4.7.5",
+    "sequelize": "^4.11.0",
     "yamdbf": "github:zajrik/yamdbf",
     "yamdbf-dm-manager": "github:zajrik/yamdbf-dm-manager"
   },

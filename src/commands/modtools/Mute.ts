@@ -139,7 +139,8 @@ export default class Mute extends Command<SweeperClient> {
 				})
 				.catch(error => {
 					console.error(error);
-					message.channel.send(`There was an error while creating mute for <@${user.id}>. Please try again.`);
+					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
+					modChannel.send(`There was an error while creating mute for <@${user.id}>. Please try again.`);
 					this.logger.error('CMD Mute', `Error muting: '${mutedUser.user.tag}' in '${message.guild.name}'`);
 				});
 

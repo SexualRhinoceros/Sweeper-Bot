@@ -1,14 +1,16 @@
-import { GuildStorage, ListenerUtil } from 'yamdbf';
-import { TextChannel, RichEmbed, Message, MessageReaction, Guild, GuildMember, Role, User, VoiceChannel } from 'discord.js';
+import { GuildStorage, ListenerUtil, Logger, logger } from 'yamdbf';
+import { Collection, TextChannel, RichEmbed, Message, MessageReaction, Guild, GuildMember, Role, User, VoiceChannel } from 'discord.js';
 import { SweeperClient } from '../SweeperClient';
 import { MuteManager } from '../mod/managers/MuteManager';
 import Constants from '../../Constants';
+import * as moment from 'moment';
 
 const config: any = require('../../../config.json');
 const { on, registerListeners } = ListenerUtil;
 
 export class Events {
 	private _client: SweeperClient;
+	@logger private readonly logger: Logger;
 
 	public constructor(client: SweeperClient)
 	{
@@ -33,7 +35,8 @@ export class Events {
 		if (user.id === this._client.user.id)
 			return;
 
-		if (user.bot && user.id !== this._client.user.id)
+		// 296023718839451649 == @Charlemagne#3214
+		if (user.id !== '296023718839451649' || user.bot && user.id !== this._client.user.id)
 			return reaction.remove(user);
 
 		const reactionAuthor: GuildMember = await reaction.message.guild.fetchMember(user);
@@ -236,9 +239,15 @@ export class Events {
 		if (!member.guild.channels.exists('name', 'members-log')) return;
 		const type: 'join' | 'leave' = joined ? 'join' : 'leave';
 		const memberLog: TextChannel = <TextChannel> member.guild.channels.find('name', 'members-log');
+
+		const joinDiscord: string = moment(member.user.createdAt).format('lll') + '\n*' + moment(new Date()).diff(member.user.createdAt, 'days') + ' days ago*';
+		const joinServer: string = moment(member.joinedAt).format('lll') + '\n*' + moment(new Date()).diff(member.joinedAt, 'days') + ' days ago*';
+
 		const embed: RichEmbed = new RichEmbed()
 			.setColor(joined ? 8450847 : 16039746)
 			.setAuthor(`${member.user.tag} (${member.id})`, member.user.avatarURL)
+			.addField('Joined Server', joinServer, true)
+			.addField('Joined Discord', joinDiscord, true)
 			.setFooter(joined ? 'User joined' : 'User left' , '')
 			.setTimestamp();
 		memberLog.send({ embed });
@@ -247,6 +256,39 @@ export class Events {
 	@on('message')
 	private async onMessage(message: Message): Promise<void>
 	{
-		// Saved for future use
+		// Determines whether to remove and log Discord invite messages
+		let userRoles: Collection<string, Role>;
+		userRoles = new Collection(Array.from(message.member.roles.entries()).sort((a: any, b: any) => b[1].position - a[1].position));
+		// build user role array
+		let roles: Array<String> = userRoles.filter((el: Role) => { if (el.name !== '@everyone' && el.managed === false) return true; }).map((el: Role) => { return el.id; });
+
+		// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators | PROD
+		// 362039223588487178 = test | DEV
+		if (roles.includes('362039223588487178') || roles.includes('157728857263308800') || roles.includes('302255737302679552')) {
+			return;
+		} else if (Constants.discordInviteRegExp.test(message.content)) {
+			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
+			const embed: RichEmbed = new RichEmbed()
+				.setColor(Constants.warnEmbedColor)
+				.setAuthor(message.member.user.tag, message.member.user.avatarURL)
+				.setDescription(`**Action:** Message Deleted\n`
+					+ `**Reason:** Discord Invites Blacklisted\n`
+					+ `**Message:** ${message.content}`)
+				.setTimestamp();
+			logChannel.send({ embed: embed });
+
+			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Discord invite links are not permitted."`)
+				.then((res) => {
+					// Inform in chat that the warn was success, wait a few sec then delete that success msg
+					this.logger.log('Events Warn', `Warned user: '${message.member.user.tag}' in '${message.guild.name}'`);
+				})
+				.catch((err) => {
+					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
+					modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user posted a **Discord Invite Link**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
+					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
+					throw new Error(err);
+				});
+			message.delete();
+		}
 	}
 }
