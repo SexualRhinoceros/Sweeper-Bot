@@ -258,7 +258,7 @@ export class Events {
 	}
 
 	@on('message')
-	private async onMessage(message: Message): Promise<void>
+	private async onMessage(message: Message, user: User): Promise<void>
 	{
 		// Determines whether to remove and log Discord invite messages
 		let userRoles: Collection<string, Role>;
