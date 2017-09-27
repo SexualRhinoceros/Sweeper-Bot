@@ -85,7 +85,7 @@ export default class Mute extends Command<SweeperClient> {
 				note = 'Please be kind to each other and read our rules in #rules-and-info.';
 			}
 			if (note.toLowerCase() === 'clan') {
-				note = 'Regarding your promotion in #clan-recruitment, please note that the channel rules ask that you be an active member of the server. Please interact with and get to know some of the other folks around here and participate in some discussions over the next few days, then feel free to post again once you\'re a bit more active.';
+				note = 'Please, no clan advertising as per Rule 3. If you\'d like to advertise your clan, we recommend the weekly thread on r/Fireteams or r/DTG\'s own Team-Up Tuesday. Thank you!';
 			}
 
 			if (user.id === message.author.id || user.id === message.guild.ownerID || user.bot) {

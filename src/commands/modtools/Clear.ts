@@ -10,7 +10,7 @@ export default class Clear extends Command<SweeperClient> {
 	public constructor() {
 		super({
 			name: 'clear',
-			aliases: ['purge'],
+			aliases: ['purge', 'sweep'],
 			desc: 'Removes the last <quantity> of messages from the channel.',
 			usage: '<prefix>clear <quantity>',
 			info: 'Can clear up to 14 days of recent messages.',
