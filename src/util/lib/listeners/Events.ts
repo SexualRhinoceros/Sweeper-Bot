@@ -266,9 +266,10 @@ export class Events {
 		// build user role array
 		let roles: Array<String> = userRoles.filter((el: Role) => { if (el.name !== '@everyone' && el.managed === false) return true; }).map((el: Role) => { return el.id; });
 
-		// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators && 297858394323419136 = Botwinder | PROD
-		// 362039223588487178 = test | DEV
-		if (roles.includes('362039223588487178') || roles.includes('157728857263308800') || roles.includes('302255737302679552') || roles.includes('297858394323419136')) {
+		// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators | PROD
+		if (roles.includes('157728857263308800') || roles.includes('302255737302679552') || message.member.user.bot) {
+			return;
+		} else if (message.content.includes('cdn.discordapp.com')) {
 			return;
 		} else if (Constants.discordInviteRegExp.test(message.content)) {
 			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
