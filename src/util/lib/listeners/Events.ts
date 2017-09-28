@@ -260,40 +260,60 @@ export class Events {
 	@on('message')
 	private async onMessage(message: Message): Promise<void>
 	{
-		// Determines whether to remove and log Discord invite messages
-		let userRoles: Collection<string, Role>;
-		userRoles = new Collection(Array.from(message.member.roles.entries()).sort((a: any, b: any) => b[1].position - a[1].position));
-		// build user role array
-		let roles: Array<String> = userRoles.filter((el: Role) => { if (el.name !== '@everyone' && el.managed === false) return true; }).map((el: Role) => { return el.id; });
+		if (Constants.discordInviteRegExp.test(message.content)) {
+			// Determines whether to remove and log Discord invite messages
+			let userRoles: Collection<string, Role>;
+			userRoles = new Collection(Array.from(message.member.roles.entries()).sort((a: any, b: any) => b[1].position - a[1].position));
+			// build user role array
+			let roles: Array<String> = userRoles.filter((el: Role) => { if (el.name !== '@everyone' && el.managed === false) return true; }).map((el: Role) => { return el.id; });
 
-		// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators | PROD
-		if (roles.includes('157728857263308800') || roles.includes('302255737302679552') || message.member.user.bot) {
-			return;
-		} else if (message.content.includes('cdn.discordapp.com')) {
-			return;
-		} else if (Constants.discordInviteRegExp.test(message.content)) {
-			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
-			const embed: RichEmbed = new RichEmbed()
-				.setColor(Constants.warnEmbedColor)
-				.setAuthor(message.member.user.tag, message.member.user.avatarURL)
-				.setDescription(`**Action:** Message Deleted\n`
-					+ `**Reason:** Discord Invites Blacklisted\n`
-					+ `**Message:** ${message.content}`)
-				.setTimestamp();
-			logChannel.send({ embed: embed });
+			// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators | PROD
+			if (roles.includes('157728857263308800') || roles.includes('302255737302679552') || message.member.user.bot) {
+				return;
+			} else if (message.content.includes('cdn.discordapp.com')) {
+				return;
+			} else if (Constants.discordInviteRegExp.test(message.content)) {
+				const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
+				const embed: RichEmbed = new RichEmbed()
+					.setColor(Constants.warnEmbedColor)
+					.setAuthor(message.member.user.tag, message.member.user.avatarURL)
+					.setDescription(`**Action:** Message Deleted\n`
+						+ `**Reason:** Discord Invites Blacklisted\n`
+						+ `**Message:** ${message.content}`)
+					.setTimestamp();
+				logChannel.send({ embed: embed });
 
-			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Discord invite links are not permitted."`)
-				.then((res) => {
-					// Inform in chat that the warn was success, wait a few sec then delete that success msg
-					this.logger.log('Events Warn', `Warned user: '${message.member.user.tag}' in '${message.guild.name}'`);
-				})
-				.catch((err) => {
-					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
-					modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user posted a **Discord Invite Link**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
-					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
-					throw new Error(err);
-				});
-			message.delete();
+				await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Discord invite links are not permitted."`)
+					.then((res) => {
+						// Inform in chat that the warn was success, wait a few sec then delete that success msg
+						this.logger.log('Events Warn', `Warned user: '${message.member.user.tag}' in '${message.guild.name}'`);
+					})
+					.catch((err) => {
+						const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
+						modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user posted a **Discord Invite Link**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
+						this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
+						throw new Error(err);
+					});
+				message.delete();
+				return;
+			}
+
+		} else {
+
+			switch (message.content) {
+				case '!!role':
+					message.channel.send(`Hey, please go to <#224197509738790922> and set your platform role(s). This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
+					return;
+
+				case '!!raid':
+					message.channel.send(`Please take all raid discussion to <#357238438694748178>. If you don\'t see the room, grab the spoiler role from <#224197509738790922>. If you\'re looking for a team for the raid, please see your respective lfg rooms, which can also be unlocked by going to <#224197509738790922> and choosing a platform.`);
+					return;
+
+				case '!!spoiler':
+				case '!!spoilers':
+					message.channel.send(`Please keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 :D2: icon on the message in there. Thank you.`);
+					return;
+			}
 		}
 	}
 }
