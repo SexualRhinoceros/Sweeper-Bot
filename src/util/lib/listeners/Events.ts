@@ -311,7 +311,7 @@ export class Events {
 
 				case '!!spoiler':
 				case '!!spoilers':
-					message.channel.send(`Please keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 :D2: icon on the message in there. Thank you.`);
+					message.channel.send(`Please keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 icon on the message in there. Thank you.`);
 					return;
 			}
 		}
