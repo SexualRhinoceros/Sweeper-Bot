@@ -60,7 +60,7 @@ Constants.platformRegExp = new RegExp('(\\bpc\\b)|(\\bpsn\\b)|(\\bps\\b)|(\\bxbl
 Constants.pcRegExp = new RegExp('([A-Za-z0-9\-\_\#]{3,16})', 'i');
 Constants.psRegExp = new RegExp('([A-Za-z0-9\-\_]{3,16})', 'i');
 Constants.xbRegExp = new RegExp('(?:.me\\sset\\sxb|.me\\sset\\sxbl|.me\\sset\\sxbox)\\s([A-Za-z0-9\-\_\\s]{1,15})', 'i');
-Constants.discordInviteRegExp = new RegExp('discord(?:app\.com|\.gg|\.me)[\/invite\/]?(?:(?!.*[Ii10OolL]).[a-zA-Z0-9]{5,6}|[a-zA-Z0-9\-]{3,32})', 'i');
+Constants.discordInviteRegExp = new RegExp('discord(?:app\.com|\.gg|\.me)\/(?:invite\/)?(?![a-zA-Z0-9\-]+\/\w)(?:[a-zA-Z0-9\-]+)', 'i');
 
 // Embed color
 Constants.embedColor = '0xFF8C00';

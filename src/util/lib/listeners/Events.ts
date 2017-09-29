@@ -270,8 +270,6 @@ export class Events {
 			// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators | PROD
 			if (roles.includes('157728857263308800') || roles.includes('302255737302679552') || message.member.user.bot) {
 				return;
-			} else if (message.content.includes('cdn.discordapp.com')) {
-				return;
 			} else if (Constants.discordInviteRegExp.test(message.content)) {
 				const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
 				const embed: RichEmbed = new RichEmbed()
@@ -300,18 +298,25 @@ export class Events {
 
 		} else {
 
-			switch (message.content) {
+			let keyword: string = message.content.split(" ")[0];
+			let mentions: string = '';
+			if (message.mentions) {
+				let mentionsArray = Array.from(message.mentions.users.values());
+				mentions = mentionsArray.join(', ');
+			}
+
+			switch (keyword) {
 				case '!!role':
-					message.channel.send(`Hey, please go to <#224197509738790922> and set your platform role(s). This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
+					message.channel.send(`Hello ${mentions}\n\nPlease go to <#224197509738790922> and set your platform role(s). This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
 					return;
 
 				case '!!raid':
-					message.channel.send(`Please take all raid discussion to <#357238438694748178>. If you don\'t see the room, grab the spoiler role from <#224197509738790922>. If you\'re looking for a team for the raid, please see your respective lfg rooms, which can also be unlocked by going to <#224197509738790922> and choosing a platform.`);
+					message.channel.send(`Hello ${mentions}\n\nPlease take all raid discussion to <#357238438694748178>. If you don\'t see the room, grab the spoiler role from <#224197509738790922>. If you\'re looking for a team for the raid, please see your respective lfg rooms, which can also be unlocked by going to <#224197509738790922> and choosing a platform.`);
 					return;
 
 				case '!!spoiler':
 				case '!!spoilers':
-					message.channel.send(`Please keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 icon on the message in there. Thank you.`);
+					message.channel.send(`Hello ${mentions}\n\nPlease keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 icon on the message in there. Thank you.`);
 					return;
 			}
 		}
