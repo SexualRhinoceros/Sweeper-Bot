@@ -1,13 +1,13 @@
 {
   "name": "sweeper-bot",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "General purpose bot for The official r/DTG Discord server.",
   "main": "sweeper.js",
-  "author": "katagatame_ <katagatame@users.noreply.github.com>",
+  "author": "D0cR3d <Mike@Layer7.Solutions>",
   "contributors": [
     {
-      "name": "D0cR3d",
-      "email": "Mike@Layer7.Solutions"
+      "name": "katagatame_",
+      "email": "katagatame@users.noreply.github.com"
     }
   ],
   "license": "MIT",
