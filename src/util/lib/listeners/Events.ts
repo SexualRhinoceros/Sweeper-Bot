@@ -272,10 +272,6 @@ export class Events {
 				return;
 			}
 
-			if (message.content.includes('cdn.discordapp.com')) {
-				return;
-			}
-
 			const regexMatch = Constants.discordInviteRegExp.exec(message.content);
 			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
 			const embed: RichEmbed = new RichEmbed()
@@ -313,7 +309,7 @@ export class Events {
 
 			switch (keyword) {
 				case '!!role':
-					message.channel.send(`Hello ${mentions}\n\nPlease go to <#224197509738790922> and set your platform role(s). This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
+					message.channel.send(`Hello ${mentions}\n\nPlease go to <#224197509738790922> and set your platform role(s). You can do this by clicking on the reaction/emote. This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
 					return;
 
 				case '!!raid':
