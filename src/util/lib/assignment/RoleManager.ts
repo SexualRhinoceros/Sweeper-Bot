@@ -28,7 +28,7 @@ export class RoleManager {
 				let _this: RoleManager = this;
 
 				await _this.reCacheMessage(channel, platformMessageId);
-				await Schedule.scheduleJob('* */12 * * *', async function() {
+				await Schedule.scheduleJob('*/30 * * * *', async function() {
 					await _this.reCacheMessage(channel, platformMessageId);
 				});
 			}
@@ -43,7 +43,7 @@ export class RoleManager {
 				let _this: RoleManager = this;
 
 				await _this.reCacheMessage(channel, spoilersMessageId);
-				await Schedule.scheduleJob('* */12 * * *', async function() {
+				await Schedule.scheduleJob('*/30 * * * *', async function() {
 					await _this.reCacheMessage(channel, spoilersMessageId);
 				});
 			}
@@ -58,7 +58,7 @@ export class RoleManager {
 				let _this: RoleManager = this;
 
 				await _this.reCacheMessage(channel, factionMessageId);
-				await Schedule.scheduleJob('* */12 * * *', async function() {
+				await Schedule.scheduleJob('*/30 * * * *', async function() {
 					await _this.reCacheMessage(channel, factionMessageId);
 				});
 			}
