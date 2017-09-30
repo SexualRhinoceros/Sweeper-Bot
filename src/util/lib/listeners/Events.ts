@@ -270,35 +270,41 @@ export class Events {
 			// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators | PROD
 			if (roles.includes('157728857263308800') || roles.includes('302255737302679552') || message.member.user.bot) {
 				return;
-			} else if (Constants.discordInviteRegExp.test(message.content)) {
-				const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
-				const embed: RichEmbed = new RichEmbed()
-					.setColor(Constants.warnEmbedColor)
-					.setAuthor(message.member.user.tag, message.member.user.avatarURL)
-					.setDescription(`**Action:** Message Deleted\n`
-						+ `**Reason:** Discord Invites Blacklisted\n`
-						+ `**Message:** ${message.content}`)
-					.setTimestamp();
-				logChannel.send({ embed: embed });
+			}
 
-				await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Discord invite links are not permitted."`)
-					.then((res) => {
-						// Inform in chat that the warn was success, wait a few sec then delete that success msg
-						this.logger.log('Events Warn', `Warned user: '${message.member.user.tag}' in '${message.guild.name}'`);
-					})
-					.catch((err) => {
-						const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
-						modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user posted a **Discord Invite Link**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
-						this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
-						throw new Error(err);
-					});
-				message.delete();
+			if (message.content.includes('cdn.discordapp.com')) {
 				return;
 			}
 
+			const regexMatch = Constants.discordInviteRegExp.exec(message.content);
+			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
+			const embed: RichEmbed = new RichEmbed()
+				.setColor(Constants.warnEmbedColor)
+				.setAuthor(message.member.user.tag, message.member.user.avatarURL)
+				.setDescription(`**Action:** Message Deleted\n`
+					+ `**Reason:** Discord Invites Blacklisted\n`
+					+ `**Match:** ${regexMatch}\n`
+					+ `**Message:** ${message.content}`)
+				.setTimestamp();
+			logChannel.send({ embed: embed });
+
+			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Discord invite links are not permitted."`)
+				.then((res) => {
+					// Inform in chat that the warn was success, wait a few sec then delete that success msg
+					this.logger.log('Events Warn', `Warned user: '${message.member.user.tag}' in '${message.guild.name}'`);
+				})
+				.catch((err) => {
+					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
+					modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user posted a **Discord Invite Link**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
+					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
+					throw new Error(err);
+				});
+			message.delete();
+			return;
+
 		} else {
 
-			let keyword: string = message.content.split(" ")[0];
+			let keyword: string = message.content.split(' ')[0];
 			let mentions: string = '';
 			if (message.mentions) {
 				let mentionsArray = Array.from(message.mentions.users.values());
