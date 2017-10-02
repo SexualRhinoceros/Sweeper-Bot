@@ -309,25 +309,36 @@ export class Events {
 
 			switch (keyword) {
 				case '!!role':
-					message.channel.send(`Hello ${mentions}\n\nPlease go to <#224197509738790922> and set your platform role(s). You can do this by clicking on the reaction/emote. This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
+					message.channel.send(`Hello ${mentions}` +
+										 `\n\n` +
+										 `Please go to <#224197509738790922> and set your platform role(s). You can do this by clicking on the reaction/emote. This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
 					return;
 
 				case '!!raid':
-					message.channel.send(`Hello ${mentions}\n\nPlease take all raid discussion to <#357238438694748178>. If you don\'t see the room, grab the spoiler role from <#224197509738790922>. If you\'re looking for a team for the raid, please see your respective lfg rooms, which can also be unlocked by going to <#224197509738790922> and choosing a platform.`);
+					message.channel.send(`Hello ${mentions}` +
+										 `\n\n` +
+										 `Please take all raid discussion to <#357238438694748178>. If you don\'t see the room, grab the spoiler role from <#224197509738790922>. If you\'re looking for a team for the raid, please see your respective lfg rooms, which can also be unlocked by going to <#224197509738790922> and choosing a platform.`);
 					return;
 
 				case '!!spoiler':
 				case '!!spoilers':
-					message.channel.send(`Hello ${mentions}\n\nPlease keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 icon on the message in there. Thank you.`);
+					message.channel.send(`Hello ${mentions}` +
+										 `\n\n` +
+										 `Please keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 icon on the message in there. Thank you.`);
 					return;
 
 				case '!!maint':
 				case '!!maintenance':
+					this.logger.log('Events Keyword', `Command !!maint called by user: '${message.member.user.tag}' in '${message.guild.name}'`);
 					message.channel.send(`Hello ${mentions}` +
-										 `\n\nPlease note the following planned Destiny maintenance events. For more info see @BungieHelp on Twitter or bungie.net. Thank you.\n\n` +
-										 `- **DATE:** Tuesday October 3rd, 2017 [2017-10-03] \n` +
-										 `-- **STARTS:** 8 AM PDT (3 PM UTC) \n` +
-										 `-- **ENDS (Estimated):** 12 PM PDT (7 PM UTC)`);
+										 `\n\n` +
+										 `Please note the following planned Destiny maintenance event(s).` +
+										 `\n\n` +
+										 `__**Tuesday October 3rd, 2017 [2017-10-03]**__\n` +
+										 `**STARTS:** 8 AM PDT (3 PM UTC) \n` +
+										 `**ENDS:** 12 PM PDT (7 PM UTC)` +
+										 `\n\n` +
+										 `Note: Maintenance times, including end time, are subject to change by Bungie without notice. For more info see @BungieHelp on Twitter or https://www.bungie.net/en/Help/Article/13125. Thank you.`);
 					return;
 			}
 		}
