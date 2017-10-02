@@ -324,9 +324,9 @@ export class Events {
 				case '!!maint':
 				case '!!maintenance':
 					message.channel.send(`Hello ${mentions}` +
-										 `\n\nThe note the following planned Destiny maintenance events. For more info see @BungieHelp on Twitter or bungie.net. Thank you.\n\n` +
-										 `- Tuesday October 3rd, 2017 [2017-10-03]` +
-										 `-- **STARTS:** 8 AM PDT (3 PM UTC)` +
+										 `\n\nPlease note the following planned Destiny maintenance events. For more info see @BungieHelp on Twitter or bungie.net. Thank you.\n\n` +
+										 `- **DATE:** Tuesday October 3rd, 2017 [2017-10-03] \n` +
+										 `-- **STARTS:** 8 AM PDT (3 PM UTC) \n` +
 										 `-- **ENDS (Estimated):** 12 PM PDT (7 PM UTC)`);
 					return;
 			}
