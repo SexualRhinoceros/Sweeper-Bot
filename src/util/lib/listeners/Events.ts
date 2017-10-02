@@ -320,6 +320,15 @@ export class Events {
 				case '!!spoilers':
 					message.channel.send(`Hello ${mentions}\n\nPlease keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 icon on the message in there. Thank you.`);
 					return;
+
+				case '!!maint':
+				case '!!maintenance':
+					message.channel.send(`Hello ${mentions}` +
+										 `\n\nThe note the following planned Destiny maintenance events. For more info see @BungieHelp on Twitter or bungie.net. Thank you.\n\n` +
+										 `- Tuesday October 3rd, 2017 [2017-10-03]` +
+										 `-- **STARTS:** 8 AM PDT (3 PM UTC)` +
+										 `-- **ENDS (Estimated):** 12 PM PDT (7 PM UTC)`);
+					return;
 			}
 		}
 	}
