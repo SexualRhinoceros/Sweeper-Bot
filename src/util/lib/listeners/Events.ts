@@ -257,6 +257,27 @@ export class Events {
 		memberLog.send({ embed });
 	}
 
+	@on('messageDelete')
+	private async onMessageDelete(message: Message): Promise<void>
+	{
+		if (message.channel.id === '255099898897104908' || message.channel.id === '323564629139652619' || message.channel.id === '361987348705312788' || message.channel.id === '322490463770640385' || message.channel.id === '342111927788634114') {
+			return;
+		}
+		const sweeperLogs: TextChannel = <TextChannel> message.member.guild.channels.find('name', 'sweeper-logs');
+		const msgCreatedAt = moment(message.createdAt).utc();
+		const embed: RichEmbed = new RichEmbed()
+			.setColor(6039746)
+			.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
+			.setDescription(`**Reason:** A Message Was Deleted\n`
+					// + `**Channel:** Name: ${message.channel.name} | Category Name: ${message.channel.parent.name} | ID: ${message.channel.id}\n`
+					+ `**Channel:** ID: ${message.channel.id}\n`
+					+ `**Message Timestamp:** ${msgCreatedAt} UTC\n`
+					+ `**Message:** ID: ${message.id} \n\n`
+					+ `${message.content}`)
+			.setTimestamp();
+		sweeperLogs.send({ embed });
+	}
+
 	@on('message')
 	private async onMessage(message: Message): Promise<void>
 	{
@@ -310,35 +331,35 @@ export class Events {
 			switch (keyword) {
 				case '!!role':
 					message.channel.send(`Hello ${mentions}` +
-										 `\n\n` +
-										 `Please go to <#224197509738790922> and set your platform role(s). You can do this by clicking on the reaction/emote. This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
+										`\n\n` +
+										`Please go to <#224197509738790922> and set your platform role(s). You can do this by clicking on the reaction/emote. This allows us to know what platform(s) you are on (or will play on), and opens the LFG channel(s) for you.`);
 					return;
 
 				case '!!raid':
 					message.channel.send(`Hello ${mentions}` +
-										 `\n\n` +
-										 `Please take all raid discussion to <#357238438694748178>. If you don\'t see the room, grab the spoiler role from <#224197509738790922>. If you\'re looking for a team for the raid, please see your respective lfg rooms, which can also be unlocked by going to <#224197509738790922> and choosing a platform.`);
+										`\n\n` +
+										`Please take all raid discussion to <#357238438694748178>. If you don\'t see the room, grab the spoiler role from <#224197509738790922>. If you\'re looking for a team for the raid, please see your respective lfg rooms, which can also be unlocked by going to <#224197509738790922> and choosing a platform.`);
 					return;
 
 				case '!!spoiler':
 				case '!!spoilers':
 					message.channel.send(`Hello ${mentions}` +
-										 `\n\n` +
-										 `Please keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 icon on the message in there. Thank you.`);
+										`\n\n` +
+										`Please keep all Destiny 2 related spoilers in <#332152701829906432>. You can gain access to that channel by going to <#224197509738790922> and clicking the Destiny 2 icon on the message in there. Thank you.`);
 					return;
 
 				case '!!maint':
 				case '!!maintenance':
 					this.logger.log('Events Keyword', `Command !!maint called by user: '${message.member.user.tag}' in '${message.guild.name}'`);
 					message.channel.send(`Hello ${mentions}` +
-										 `\n\n` +
-										 `Please note the following planned Destiny maintenance event(s).` +
-										 `\n\n` +
-										 `__**Tuesday October 3rd, 2017 [2017-10-03]**__\n` +
-										 `**STARTS:** 8 AM PDT (3 PM UTC) \n` +
-										 `**ENDS:** 12 PM PDT (7 PM UTC)` +
-										 `\n\n` +
-										 `Note: Maintenance times, including end time, are subject to change by Bungie without notice. For more info see @BungieHelp on Twitter or https://www.bungie.net/en/Help/Article/13125. Thank you.`);
+										`\n\n` +
+										`Please note the following planned Destiny maintenance event(s).` +
+										`\n\n` +
+										`__**Tuesday October 3rd, 2017 [2017-10-03]**__\n` +
+										`**STARTS:** 8 AM PDT (3 PM UTC) \n` +
+										`**ENDS:** 12 PM PDT (7 PM UTC)` +
+										`\n\n` +
+										`Note: Maintenance times, including end time, are subject to change by Bungie without notice. For more info see @BungieHelp on Twitter or https://www.bungie.net/en/Help/Article/13125. Thank you.`);
 					return;
 			}
 		}

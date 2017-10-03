@@ -25,27 +25,30 @@ export class SweeperClient extends Client {
 	// constructor
 	public constructor() {
 		super({
-			token: config.token,
-			owner: config.owner,
-			statusText: config.status,
-			unknownCommandError: false,
-			commandsDir: __dirname + '/../../commands',
-			disableBase: [
-				'clearlimit',
-				'disablegroup',
-				'enablegroup',
-				'eval',
-				'eval:ts',
-				'limit',
-				'listgroups',
-				'ping',
-				'reload'
-			],
-			readyText: 'Ready\u0007',
-			ratelimit: '10/1m',
-			pause: true,
-			plugins: [dmManager(config.ServerData.botDMServerId)]
-		});
+				token: config.token,
+				owner: config.owner,
+				statusText: config.status,
+				unknownCommandError: false,
+				commandsDir: __dirname + '/../../commands',
+				disableBase: [
+					'clearlimit',
+					'disablegroup',
+					'enablegroup',
+					'eval',
+					'eval:ts',
+					'limit',
+					'listgroups',
+					'ping',
+					'reload'
+				],
+				readyText: 'Ready\u0007',
+				ratelimit: '10/1m',
+				pause: true,
+				plugins: [dmManager(config.ServerData.botDMServerId)]
+			},
+			{
+				messageCacheMaxSize: 500
+			});
 
 		this.config = config;
 		this.database = new Database(credentials);
