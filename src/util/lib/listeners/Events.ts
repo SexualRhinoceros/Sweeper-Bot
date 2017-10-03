@@ -263,7 +263,7 @@ export class Events {
 		if (message.channel.id === '255099898897104908' || message.channel.id === '323564629139652619' || message.channel.id === '361987348705312788' || message.channel.id === '322490463770640385' || message.channel.id === '342111927788634114') {
 			return;
 		}
-		const sweeperLogs: TextChannel = <TextChannel> message.member.guild.channels.find('name', 'sweeper-logs');
+		const sweeperLogs: TextChannel = <TextChannel> message.member.guild.channels.find('name', 'deleted-logs');
 		const msgCreatedAt = moment(message.createdAt).utc();
 		const embed: RichEmbed = new RichEmbed()
 			.setColor(6039746)
