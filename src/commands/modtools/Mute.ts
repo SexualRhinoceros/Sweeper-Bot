@@ -126,9 +126,9 @@ export default class Mute extends Command<SweeperClient> {
 
 						// If message sent in the mod channel, then give full details, otherwise be vague
 						if (message.channel.id === Constants.modChannelId) {
-							message.channel.send(`Successfully muted <@${user.id}> for **${muteTimeHUMN}**.`);
+							message.channel.send(`Successfully muted <@${user.id}> for **${muteTimeHUMN}**. ${Constants.sweeperbot}`);
 						} else {
-							message.channel.send(`That action was successful.`);
+							message.channel.send(`That action was successful. ${Constants.sweeperbot}`);
 							message.delete();
 						}
 

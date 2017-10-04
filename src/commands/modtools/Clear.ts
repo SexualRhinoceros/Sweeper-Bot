@@ -1,5 +1,6 @@
 import { Command, Message, Middleware, CommandDecorators, Logger, logger } from 'yamdbf';
 import { SweeperClient } from '../../util/lib/SweeperClient';
+import Constants from '../../util/Constants';
 
 const { resolve, expect } = Middleware;
 const { using } = CommandDecorators;
@@ -34,6 +35,8 @@ export default class Clear extends Command<SweeperClient> {
 			await message.channel.bulkDelete(100);
 		}
 		await message.channel.bulkDelete(quantity);
+
+		await message.channel.send(`Messages purged ${Constants.sweeperbot}`);
 
 		return this.logger.info('CMD Clear', `Cleared ${totalQuantity} messages. Requested by: ${message.member.user.tag}`);
 	}
