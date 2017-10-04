@@ -260,9 +260,12 @@ export class Events {
 	@on('messageDelete')
 	private async onMessageDelete(message: Message): Promise<void>
 	{
-		if (message.channel.id === '255099898897104908' || message.channel.id === '323564629139652619' || message.channel.id === '361987348705312788' || message.channel.id === '322490463770640385' || message.channel.id === '342111927788634114') {
-			return;
-		}
+		// dm, group, text, voice
+		if (message.channel.type !== 'text') return;
+		const whitelistedChannels = ['255099898897104908', '323564629139652619', '361987348705312788', '322490463770640385', '342111927788634114', '297866918839451651', '322492361861103616', '332354014903664641'];
+		if (whitelistedChannels.includes(message.channel.id)) return;
+
+		const msgChannel: TextChannel = <TextChannel> message.member.guild.channels.find('id', message.channel.id);
 		const sweeperLogs: TextChannel = <TextChannel> message.member.guild.channels.find('name', 'deleted-logs');
 		const msgCreatedAt = moment(message.createdAt).utc();
 		const embed: RichEmbed = new RichEmbed()
@@ -270,10 +273,10 @@ export class Events {
 			.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
 			.setDescription(`**Reason:** A Message Was Deleted\n`
 					// + `**Channel:** Name: ${message.channel.name} | Category Name: ${message.channel.parent.name} | ID: ${message.channel.id}\n`
-					+ `**Channel:** ID: ${message.channel.id}\n`
+					+ `**Channel:** #${msgChannel.name} (${message.channel.id})\n`
 					+ `**Message Timestamp:** ${msgCreatedAt} UTC\n`
-					+ `**Message:** ID: ${message.id} \n\n`
-					+ `${message.content}`)
+					+ `**Message:** (${message.id})\n\n`
+					+ `${message.cleanContent}`)
 			.setTimestamp();
 		sweeperLogs.send({ embed });
 	}
