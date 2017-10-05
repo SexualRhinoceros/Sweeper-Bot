@@ -296,15 +296,18 @@ export class Events {
 				return;
 			}
 
+			const msgChannel: TextChannel = <TextChannel> message.member.guild.channels.find('id', message.channel.id);
 			const regexMatch = Constants.discordInviteRegExp.exec(message.content);
 			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
 			const embed: RichEmbed = new RichEmbed()
 				.setColor(Constants.warnEmbedColor)
-				.setAuthor(message.member.user.tag, message.member.user.avatarURL)
+				.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
 				.setDescription(`**Action:** Message Deleted\n`
 					+ `**Reason:** Discord Invites Blacklisted\n`
 					+ `**Match:** ${regexMatch}\n`
-					+ `**Message:** ${message.content}`)
+					+ `**Channel:** #${msgChannel.name} (${message.channel.id})\n`
+					+ `**Message:** (${message.id})\n\n`
+					+ `${message.cleanContent}`)
 				.setTimestamp();
 			logChannel.send({ embed: embed });
 

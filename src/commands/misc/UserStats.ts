@@ -20,6 +20,7 @@ export default class UserStats extends Command {
 	}
 
 	public async action(message: Message, args: string[]): Promise<any> {
+		const idRegex: RegExp = /^(?:<@!?)?(\d+)>?$/;
 		let guildMember: GuildMember;
 		let joinDiscord: string = '';
 		let joinServer: string = '';
@@ -27,28 +28,26 @@ export default class UserStats extends Command {
 		let status: string = '';
 
 		// grab user information
-		if (!args[0])
+		// guildMember = message.member;
+		if (!args[0]) {
 			guildMember = message.member;
-		else {
-			if (message.mentions.members.size === 0) {
-				// if there was an attempt and args[0] was too short
-				if (args[0] && args[0].length < 3)
-					return message.channel.send(`Please provide more letters for your search.`);
+		} else {
+			// if that attempt was a mention, get very first one
+			if (message.mentions.users.size === 1) {
+				guildMember = await message.guild.fetchMember(message.mentions.users.first().id);
 
-				// map users
-				const users: Array<GuildMember> = message.guild.members.map((member: GuildMember) => member);
-
-				// search for user
-				let options: any = { extract: (el: GuildMember) => { return el.displayName; } };
-				let results: any = fuzzy.filter(args[0].toString(), users, options);
-
-				if (results.length === 1) {
-					guildMember = results[0].original;
-				} else
-					return message.channel.send(`**${results.length}** users found: \`${results.map((el: any) => { return el.original.displayName; }).join('\`, \`')}\`.  Please be more specific.`);
+			// if no mentions, plaintext
 			} else {
-				guildMember = message.mentions.members.first();
+				// Check if it's a user ID first
+				if (idRegex.test(args[0])) {
+					try { guildMember = await message.guild.fetchMember(args[0].match(idRegex)[0]); }
+					catch (err) { return message.channel.send(`Could not locate user **${args[0]}** from ID argument.`); }
+				}
 			}
+		} 
+
+		if (!guildMember) {
+			return message.channel.send(`No users found. Please specify a user by User Mention, or User ID.`);
 		}
 
 		// start typing
@@ -80,7 +79,7 @@ export default class UserStats extends Command {
 		// build the embed
 		const embed: RichEmbed = new RichEmbed()
 			.setColor(Constants.embedColor)
-			.setAuthor(guildMember.user.username + '#' + guildMember.user.discriminator, guildMember.user.avatarURL)
+			.setAuthor(`${guildMember.user.tag} (${guildMember.id})`, guildMember.user.avatarURL)
 			.setDescription(status)
 			.addField('Joined Server', joinServer, true)
 			.addField('Joined Discord', joinDiscord, true)
