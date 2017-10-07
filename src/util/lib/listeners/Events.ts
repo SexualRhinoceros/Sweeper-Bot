@@ -260,6 +260,12 @@ export class Events {
 	@on('messageDelete')
 	private async onMessageDelete(message: Message): Promise<void>
 	{
+		let auditExe = await message.guild.fetchAuditLogs({
+			limit: 3
+		});
+
+		console.log(auditExe.entries);
+
 		// dm, group, text, voice
 		if (message.channel.type !== 'text') return;
 		const whitelistedChannels = ['255099898897104908', '323564629139652619', '361987348705312788', '322490463770640385', '342111927788634114', '297866918839451651', '322492361861103616', '332354014903664641'];
@@ -314,6 +320,7 @@ export class Events {
 			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Discord invite links are not permitted."`)
 				.then((res) => {
 					// Inform in chat that the warn was success, wait a few sec then delete that success msg
+					this._client.database.commands.warn.addWarn(message.guild.id, this._client.user.id, message.member.user.id, 'Warned: Discord Invite Link');
 					this.logger.log('Events Warn', `Warned user: '${message.member.user.tag}' in '${message.guild.name}'`);
 				})
 				.catch((err) => {

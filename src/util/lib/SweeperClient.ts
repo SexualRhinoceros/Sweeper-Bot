@@ -34,11 +34,8 @@ export class SweeperClient extends Client {
 					'clearlimit',
 					'disablegroup',
 					'enablegroup',
-					'eval',
-					'eval:ts',
 					'limit',
 					'listgroups',
-					'ping',
 					'reload'
 				],
 				readyText: 'Ready\u0007',
