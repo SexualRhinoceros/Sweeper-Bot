@@ -15,7 +15,7 @@ export default class CreatePost extends Command {
 			'faction  : Creates faction wars post\n',
 			group: 'assignment',
 			guildOnly: true,
-			roles: ['The Vanguard', 'Discord Chat Mods']
+			callerPermissions: ['MANAGE_MESSAGES']
 		});
 	}
 

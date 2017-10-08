@@ -11,11 +11,10 @@ export default class Mute extends Command<SweeperClient> {
 
 	public constructor() {
 		super({
-			name: 'warn',
-			aliases: ['w'],
-			desc: 'Issue a warning to a user.',
-			usage: '<prefix>warn <User> <Reason>?',
-			info: 'If no reason specified default value will be used.',
+			name: 'send',
+			aliases: ['s'],
+			desc: 'Send a message to a user via Sweeper Bot DMs.',
+			usage: '<prefix>send <User> <Message>?',
 			group: 'modtools',
 			guildOnly: true,
 			callerPermissions: ['MANAGE_MESSAGES']
@@ -82,13 +81,10 @@ export default class Mute extends Command<SweeperClient> {
 			let note: string = '';
 			note = this.parseNote(args);
 			if (note.length === 0) {
-				note = 'Please be kind to each other and read our rules in #rules-and-info.';
-			}
-			if (note.toLowerCase() === 'clan') {
-				note = 'Please, no clan advertising as per Rule 3. If you\'d like to advertise your clan, we recommend the weekly thread on r/Fireteams or r/DTG\'s own Team-Up Tuesday. Thank you!';
+				return message.channel.send('Please provide a message to send.');
 			}
 
-			if (user.id === message.author.id || user.id === message.guild.ownerID || user.bot) {
+			if (user.id === message.author.id || user.bot) {
 				message.channel.send('You may not use this command on that user.');
 				return message.delete();
 			}
@@ -100,32 +96,23 @@ export default class Mute extends Command<SweeperClient> {
 				message.delete();
 			}
 
-			// Log warning to database & logs channel
 			try {
-				this.client.mod.actions.warn(gmUser, issuer, message.guild, note);
-			} catch (err) {
-				const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
-				modChannel.send(`There was an error logging to the database/log channel for ${gmUser.user.tag}'s warning. Please try again.\n\n**Error:**\n${err}`);
-				return this.logger.log('CMD Warn', `Unable to warn user: '${gmUser.user.tag}' in '${message.guild.name}'. Error logging to DB/Modlogs channel.`);
-			}
-
-			try {
-				await gmUser.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"${note}"`)
+				await gmUser.send(`You have received a message from the **${message.guild.name}** server moderators:\n\n"${note}"${Constants.footer}`)
 					.then((res) => {
 						// Inform in chat that the warn was success, wait a few sec then delete that success msg
-						this.logger.log('CMD Warn', `Warned user: '${gmUser.user.tag}' in '${message.guild.name}'`);
+						this.logger.log('CMD Send', `Sent message to user: '${gmUser.user.tag}' in '${message.guild.name}'`);
 					})
 					.catch((err) => {
 						const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
-						modChannel.send(`There was an error informing ${gmUser.user.tag} (${user.id}) of their warning. Their DMs may be disabled.\n\n**Error:**\n${err}`);
-						this.logger.log('CMD Warn', `Unable to warn user: '${gmUser.user.tag}' in '${message.guild.name}'`);
+						modChannel.send(`There was an error sending that message to ${gmUser.user.tag} (${user.id}). Their DMs may be disabled.\n\n**Error:**\n${err}`);
+						this.logger.log('CMD Send', `Unable to send message to user: '${gmUser.user.tag}' in '${message.guild.name}'`);
 						throw new Error(err);
 					});
 
 				// If message sent in the mod channel, then give full details, otherwise be vague
 				let msgSuccess: Message;
 				if (message.channel.id === Constants.modChannelId) {
-					msgSuccess = <Message> await message.channel.send(`Warned <@${user.id}>. ${Constants.sweeperbot}`);
+					msgSuccess = <Message> await message.channel.send(`Sent message to: <@${user.id}>. ${Constants.sweeperbot}`);
 				} else {
 					msgSuccess = <Message> await message.channel.send(`That action was successful. ${Constants.sweeperbot}`);
 					await new Promise((r: any) => setTimeout(r, 5000));
