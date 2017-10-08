@@ -25,7 +25,7 @@ export default class Note extends Command {
 			'reset <User>             : Deletes all notes for user',
 			group: 'modtools',
 			guildOnly: true,
-			roles: ['The Vanguard', 'Discord Chat Mods', 'Mod Assistant']
+			callerPermissions: ['MANAGE_MESSAGES']
 		});
 	}
 

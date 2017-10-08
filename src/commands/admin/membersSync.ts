@@ -17,65 +17,55 @@ export default class Mute extends Command<SweeperClient> {
 		super({
 			name: 'membersSync',
 			aliases: ['ms'],
-			desc: 'Sync list of users in the server',
+			desc: 'Sync list of users in the server to the database.',
 			usage: '<prefix>membersSync',
 			group: 'admin',
-			guildOnly: true
+			guildOnly: true,
+			callerPermissions: ['ADMINISTRATOR']
 		});
 	}
 
 	public async action(message: Message): Promise<any> {
-		let msgAuthor: GuildMember = message.member;
 
-		if (msgAuthor) {
-			// If calling user is the server owner or D0cR3d
-			if (msgAuthor.user.id === message.guild.ownerID || msgAuthor.user.id === '82942340309716992') {
+		let embed: RichEmbed = new RichEmbed();
+		embed.setDescription('If this is a large server, this will take a while and should **NOT** be done often.');
+		// If message sent from a non-mod channel then show minimal info
+		if (message.channel.id !== Constants.modChannelId) {
+			// Delete calling message immediately
+			message.delete();
+		}
 
-				let embed: RichEmbed = new RichEmbed();
-				embed.setDescription('If this is a large server, this will take a while and should **NOT** be done often.');
-				// If message sent from a non-mod channel then show minimal info
-				if (message.channel.id !== Constants.modChannelId) {
-					// Delete calling message immediately
-					message.delete();
-				}
+		const [result, ask, confirmation]: [PromptResult, Message, Message] = <[PromptResult, Message, Message]> await prompt(message,
+			'Are you sure you want to initiate a member sync? (__y__es | __n__o)',
+			/^(?:yes|y)$/i, /^(?:no|n)$/i, { embed });
 
-				const [result, ask, confirmation]: [PromptResult, Message, Message] = <[PromptResult, Message, Message]> await prompt(message,
-					'Are you sure you want to initiate a member sync? (__y__es | __n__o)',
-					/^(?:yes|y)$/i, /^(?:no|n)$/i, { embed });
+		// If message sent from a non-mod channel then delete the mod messages
+		if (ask.channel.id !== Constants.modChannelId) {
+			// Delete the prompt messages
+			ask.delete();
+			confirmation.delete();
+		}
 
-				// If message sent from a non-mod channel then delete the mod messages
-				if (ask.channel.id !== Constants.modChannelId) {
-					// Delete the prompt messages
-					ask.delete();
-					confirmation.delete();
-				}
+		if (result === PromptResult.TIMEOUT) return message.channel.send('Command timed out, aborting action.');
+		if (result === PromptResult.FAILURE) return message.channel.send('Okay, aborting action.');
 
-				if (result === PromptResult.TIMEOUT) return message.channel.send('Command timed out, aborting action.');
-				if (result === PromptResult.FAILURE) return message.channel.send('Okay, aborting action.');
-
-				// If guild owner confirmed action
-				try {
-					let actionMsg: Message;
-					actionMsg = <Message> await message.channel.send(`Attempting action...`);
-					// Fetches all members including offline
-					await message.guild.fetchMembers();
-					// Adds to the database
-					for (const member of message.guild.members.values()) {
-						await this.client.mod.actions.userJoin(member, message.guild);
-						this.logger.log('CMD membersSync', `Added ${member.user.tag} to server join logs.`);
-						await new Promise((r: any) => setTimeout(r, 250));
-					}
-					return actionMsg.edit(`That action has completed.`);
-
-				} catch (err) {
-					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
-					modChannel.send(`There was an error syncing the server members. Please try again.\n\n**Error:**\n${err}`);
-					return this.logger.log('CMD membersSync', `Unable to sync members: Possible error logging to DB.`);
-				}
-			}  else {
-				message.channel.send('You may not use this command.');
-				return message.delete();
+		// If guild owner confirmed action
+		try {
+			await message.channel.send(`Attempting Member Sync to database...`);
+			// Fetches all members including offline
+			await message.guild.fetchMembers();
+			// Adds to the database
+			for (const member of message.guild.members.values()) {
+				await this.client.mod.actions.userJoin(member, message.guild);
+				this.logger.log('CMD membersSync', `Added ${member.user.tag} to server join logs.`);
+				await new Promise((r: any) => setTimeout(r, 250));
 			}
+			return message.channel.send(`Member Sync has completed.`);
+
+		} catch (err) {
+			const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
+			modChannel.send(`There was an error syncing the server members. Please try again.\n\n**Error:**\n${err}`);
+			return this.logger.log('CMD membersSync', `Unable to sync members: Possible error logging to DB.`);
 		}
 	}
 }
