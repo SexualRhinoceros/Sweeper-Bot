@@ -44,7 +44,7 @@ export default class UserStats extends Command {
 					catch (err) { return message.channel.send(`Could not locate user **${args[0]}** from ID argument.`); }
 				}
 			}
-		} 
+		}
 
 		if (!guildMember) {
 			return message.channel.send(`No users found. Please specify a user by User Mention, or User ID.`);
