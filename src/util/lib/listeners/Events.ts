@@ -297,8 +297,10 @@ export class Events {
 			if (roles.includes('157728857263308800') || roles.includes('302255737302679552') || message.member.user.bot) {
 				return;
 			}
+			message.delete();
+			message.channel.send(`<@${message.author.id}>, no advertising for other Discord servers is allowed.`);
 
-			const msgChannel: TextChannel = <TextChannel> message.member.guild.channels.find('id', message.channel.id);
+			const msgChannel: TextChannel = <TextChannel> message.channel;
 			const regexMatch = Constants.discordInviteRegExp.exec(message.content);
 			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
 			const embed: RichEmbed = new RichEmbed()
@@ -307,7 +309,7 @@ export class Events {
 				.setDescription(`**Action:** Message Deleted\n`
 					+ `**Reason:** Discord Invites Blacklisted\n`
 					+ `**Match:** ${regexMatch}\n`
-					+ `**Channel:** #${msgChannel.name} (${message.channel.id})\n`
+					+ `**Channel:** #${msgChannel.name} (<${message.channel.id}>)\n`
 					+ `**Message:** (${message.id})\n\n`
 					+ `${message.cleanContent}`)
 				.setTimestamp();
@@ -325,10 +327,45 @@ export class Events {
 					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
 					throw new Error(err);
 				});
-			message.delete();
+
 			return;
 
-		} else {
+		} 
+		if(message.mentions.users.keyArray().length > 5) {
+			if(message.member.roles.get("302255737302679552") || message.member.roles.get("157728857263308800")) return;
+			message.delete();
+			message.channel.send(`<@${message.author.id}>, do not mass-mention users.`);
+			
+			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
+			const msgChannel: TextChannel = <TextChannel> message.channel; 
+			const embed: RichEmbed = new RichEmbed()
+				.setColor(Constants.warnEmbedColor)
+				.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
+				.setDescription(`**Action:** Message Deleted\n`
+					+ `**Reason:** Mention spam\n`
+					+ "**Channel:** " + msgChannel.name + ` (<#${message.channel.id}>)` + "\n"
+					+ `**Message:** (${message.id})\n\n`
+					+ `${message.cleanContent}`)
+				.setTimestamp();
+			logChannel.send({ embed: embed });
+			
+			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Do not spam mentions."`)
+			.then((res) => {
+				this._client.database.commands.warn.addWarn(message.guild.id, this._client.user.id, message.member.user.id, 'Warned: Mention spam.');
+				this.logger.log('Events Warn', `Warned user: '${message.member.user.tag}' in '${message.guild.name}'`);
+			})
+			.catch((err) => {
+				const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
+				modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user **spammed mentions**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
+				this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
+				throw new Error(err);
+			});
+
+			return;
+		}
+
+
+		else {
 
 			let keyword: string = message.content.split(' ')[0];
 			let mentions: string = '';
