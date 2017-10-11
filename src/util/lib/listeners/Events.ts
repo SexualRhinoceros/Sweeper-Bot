@@ -298,7 +298,6 @@ export class Events {
 				return;
 			}
 			message.delete();
-			message.channel.send(`<@${message.author.id}>, no advertising for other Discord servers is allowed.`);
 
 			const msgChannel: TextChannel = <TextChannel> message.channel;
 			const regexMatch = Constants.discordInviteRegExp.exec(message.content);
@@ -309,7 +308,7 @@ export class Events {
 				.setDescription(`**Action:** Message Deleted\n`
 					+ `**Reason:** Discord Invites Blacklisted\n`
 					+ `**Match:** ${regexMatch}\n`
-					+ `**Channel:** #${msgChannel.name} (<${message.channel.id}>)\n`
+					+ `**Channel:** #${msgChannel.name} (${message.channel.id})\n`
 					+ `**Message:** (${message.id})\n\n`
 					+ `${message.cleanContent}`)
 				.setTimestamp();
@@ -332,7 +331,6 @@ export class Events {
 		if (message.mentions.users.keyArray().length > 5) {
 			if (message.member.roles.get('302255737302679552') || message.member.roles.get('157728857263308800')) return;
 			message.delete();
-			message.channel.send(`<@${message.author.id}>, do not mass-mention users.`);
 
 			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
 			const msgChannel: TextChannel = <TextChannel> message.channel;
@@ -341,7 +339,7 @@ export class Events {
 				.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
 				.setDescription(`**Action:** Message Deleted\n`
 					+ `**Reason:** Mention spam\n`
-					+ '**Channel:** ' + msgChannel.name + ` (<#${message.channel.id}>)` + '\n'
+					+ `**Channel:** ${msgChannel.name} ${message.channel.id}) \n`
 					+ `**Message:** (${message.id})\n\n`
 					+ `${message.cleanContent}`)
 				.setTimestamp();
