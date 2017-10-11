@@ -327,9 +327,7 @@ export class Events {
 					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
 					throw new Error(err);
 				});
-
 			return;
-
 		} 
 		if(message.mentions.users.keyArray().length > 5) {
 			if(message.member.roles.get("302255737302679552") || message.member.roles.get("157728857263308800")) return;
@@ -360,11 +358,8 @@ export class Events {
 				this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
 				throw new Error(err);
 			});
-
 			return;
 		}
-
-
 		else {
 
 			let keyword: string = message.content.split(' ')[0];
