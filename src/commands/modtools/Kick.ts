@@ -123,7 +123,7 @@ export default class Mute extends Command<SweeperClient> {
 			// If mod confirmed action, then perform action
 			try {
 				const gmUser: GuildMember = await message.guild.fetchMember(user);
-				await user.send(`You have been kicked from **${message.guild.name}**.\n\n**A message from the mods:**\n\n"${note}"`)
+				await user.send(`You have been kicked from **${message.guild.name}**.\n\n**A message from the mods:**\n\n"${note}"${Constants.footer}`)
 					.then((res) => {
 						// Inform in chat that the warn was success, wait a few sec then delete that success msg
 						this.logger.log('CMD Kick', `Informed user of action: '${user.tag}' in '${message.guild.name}'`);

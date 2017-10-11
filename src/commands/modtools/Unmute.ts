@@ -102,7 +102,7 @@ export default class Mute extends Command<SweeperClient> {
 					}
 
 					this.logger.log('CMD Unmute', `Unmuted user: '${mutedUser.user.tag}' in '${message.guild.name}'`);
-					return user.send(`You have been unmuted on ${message.guild.name}. You may now send messages.`);
+					return user.send(`You have been unmuted on ${message.guild.name}. You may now send messages. ${Constants.footer}`);
 				})
 				.catch(error => {
 					console.error(error);

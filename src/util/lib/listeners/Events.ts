@@ -393,6 +393,10 @@ export class Events {
 										`\n\n` +
 										`Note: Maintenance times, including end time, are subject to change by Bungie without notice. For more info see @BungieHelp on Twitter or https://www.bungie.net/en/Help/Article/13125 Thank you.`);
 					return;
+
+				case '!!burn':
+					message.channel.send(`Ooooooh ${mentions} that burn must hurt! You should get that checked out: <https://en.wikipedia.org/wiki/List_of_burn_centers_in_the_United_States>`);
+					return;
 			}
 		}
 	}

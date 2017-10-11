@@ -122,7 +122,7 @@ export default class Mute extends Command<SweeperClient> {
 					this.client.mod.actions.setMuteDuration(mutedUser, message.guild, muteTimeMS);
 					this.logger.log('CMD Mute', `Muted user: '${mutedUser.user.tag}' in '${message.guild.name}'`);
 					try {
-						mutedUser.send(`You have been muted on **${message.guild.name}** for **${muteTimeHUMN}**.\n\n**A message from the mods:**\n\n"${note}"`);
+						mutedUser.send(`You have been muted on **${message.guild.name}** for **${muteTimeHUMN}**.\n\n**A message from the mods:**\n\n"${note}"${Constants.footer}`);
 
 						// If message sent in the mod channel, then give full details, otherwise be vague
 						if (message.channel.id === Constants.modChannelId) {
