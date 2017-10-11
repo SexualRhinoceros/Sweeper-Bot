@@ -331,7 +331,7 @@ export class Events {
 				.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
 				.setDescription(`**Action:** Message Deleted\n`
 					+ `**Reason:** Mention spam\n`
-					+ `**Channel:** ${msgChannel.name} ${message.channel.id}) \n`
+					+ `**Channel:** ${msgChannel.name} (${message.channel.id}) \n`
 					+ `**Message:** (${message.id})\n\n`
 					+ `${message.cleanContent}`)
 				.setTimestamp();

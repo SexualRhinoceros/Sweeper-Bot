@@ -1,5 +1,5 @@
 import { Command, GuildStorage, Time, Logger, logger, Message } from 'yamdbf';
-import { Collection, GuildMember, RichEmbed, Role, TextChannel, User } from 'discord.js';
+import { GuildMember, RichEmbed, Role, TextChannel, User } from 'discord.js';
 import Constants from '../../util/Constants';
 import * as fuzzy from 'fuzzy';
 import { SweeperClient } from '../../util/lib/SweeperClient';

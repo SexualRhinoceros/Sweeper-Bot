@@ -72,6 +72,21 @@ export class SweeperClient extends Client {
 		this.logger.info('CORE', `Connected to: RoleManager`);
 		await this.voiceChannelManager.init();
 		this.logger.info('CORE', `Connected to: VoiceChannelManager`);
+
+		try {
+			for (let [channelID, chanObj] of this.channels.filter(chan => chan.type === 'text')) {
+				let channel: TextChannel = <TextChannel> this.channels.find('id', channelID);
+				if (channel && channel.guild.id === config.ServerData.botDMServerId) { continue; }
+				channel.fetchMessages({limit: 100})
+					.then((res) => {
+						this.logger.info('CORE', `Fetched message history for: ${channel.name} in ${channel.guild.name}`);
+					})
+					.catch((err) => {
+						this.logger.info('CORE', `Error with fetchMessages: ${err}`);
+					});
+			}
+		}
+		catch (err) { this.logger.info('CORE', `Error retrieving message history: ${err}`); }
 	}
 
 	@once('disconnect')

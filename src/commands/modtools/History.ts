@@ -1,7 +1,7 @@
 // Note: ModManager and and a few related aspects have come from https://github.com/zajrik/modbot
 
 import { Command, GuildStorage, Logger, logger } from 'yamdbf';
-import { Collection, GuildMember, Message, RichEmbed, TextChannel, User } from 'discord.js';
+import { GuildMember, Message, RichEmbed, TextChannel, User } from 'discord.js';
 import Constants from '../../util/Constants';
 import * as fuzzy from 'fuzzy';
 import { SweeperClient } from '../../util/lib/SweeperClient';
