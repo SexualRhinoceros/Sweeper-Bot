@@ -262,13 +262,11 @@ export class Events {
 	{
 		// dm, group, text, voice
 		if (message.channel.type !== 'text') return;
-		const whitelistedChannels = ['255099898897104908', '323564629139652619', '361987348705312788', '322490463770640385', '342111927788634114', '297866918839451651', '322492361861103616', '332354014903664641'];
-		if (whitelistedChannels.includes(message.channel.id)) return;
+		if (Constants.whitelistedChannels.includes(message.channel.id)) return;
+		if (message.guild.id === Constants.botDMServerId) return;
 
-		if (message.guild.id === '336174021794070530') return;
-
-		const msgChannel: TextChannel = <TextChannel> message.member.guild.channels.find('id', message.channel.id);
 		const sweeperLogs: TextChannel = <TextChannel> message.member.guild.channels.find('name', 'deleted-logs');
+		const msgChannel: TextChannel = <TextChannel> message.channel;
 		const msgCreatedAt = moment(message.createdAt).utc();
 		const embed: RichEmbed = new RichEmbed()
 			.setColor(6039746)
@@ -286,19 +284,14 @@ export class Events {
 	@on('message')
 	private async onMessage(message: Message): Promise<void>
 	{
+		// dm, group, text, voice
+		if (message.channel.type !== 'text') return;
+		const msgChannel: TextChannel = <TextChannel> message.channel;
+
 		if (Constants.discordInviteRegExp.test(message.content)) {
-			// Determines whether to remove and log Discord invite messages
-			let userRoles: Collection<string, Role>;
-			userRoles = new Collection(Array.from(message.member.roles.entries()).sort((a: any, b: any) => b[1].position - a[1].position));
-			// build user role array
-			let roles: Array<String> = userRoles.filter((el: Role) => { if (el.name !== '@everyone' && el.managed === false) return true; }).map((el: Role) => { return el.id; });
+			if (message.member.hasPermission('MANAGE_MESSAGES')) return;
+			message.delete();
 
-			// 157728857263308800 = The Vanguard && 302255737302679552 = Moderators | PROD
-			if (roles.includes('157728857263308800') || roles.includes('302255737302679552') || message.member.user.bot) {
-				return;
-			}
-
-			const msgChannel: TextChannel = <TextChannel> message.member.guild.channels.find('id', message.channel.id);
 			const regexMatch = Constants.discordInviteRegExp.exec(message.content);
 			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
 			const embed: RichEmbed = new RichEmbed()
@@ -317,7 +310,7 @@ export class Events {
 				.then((res) => {
 					// Inform in chat that the warn was success, wait a few sec then delete that success msg
 					this._client.database.commands.warn.addWarn(message.guild.id, this._client.user.id, message.member.user.id, 'Warned: Discord Invite Link');
-					this.logger.log('Events Warn', `Warned user: '${message.member.user.tag}' in '${message.guild.name}'`);
+					this.logger.log('Events Warn', `Warned user (Discord Invite): '${message.member.user.tag}' in '${message.guild.name}'`);
 				})
 				.catch((err) => {
 					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
@@ -325,11 +318,40 @@ export class Events {
 					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
 					throw new Error(err);
 				});
-			message.delete();
 			return;
+		}
 
-		} else {
+		if (message.mentions.users.keyArray().length > 5) {
+			if (message.member.hasPermission('MANAGE_MESSAGES')) return;
+			message.delete();
 
+			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
+			const embed: RichEmbed = new RichEmbed()
+				.setColor(Constants.warnEmbedColor)
+				.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
+				.setDescription(`**Action:** Message Deleted\n`
+					+ `**Reason:** Mention spam\n`
+					+ `**Channel:** ${msgChannel.name} ${message.channel.id}) \n`
+					+ `**Message:** (${message.id})\n\n`
+					+ `${message.cleanContent}`)
+				.setTimestamp();
+			logChannel.send({ embed: embed });
+
+			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Do not spam mentions. This includes mentioning a lot of users at once."`)
+				.then((res) => {
+					this._client.database.commands.warn.addWarn(message.guild.id, this._client.user.id, message.member.user.id, 'Warned: Mention spam.');
+					this.logger.log('Events Warn', `Warned user (Mention Spam): '${message.member.user.tag}' in '${message.guild.name}'`);
+				})
+				.catch((err) => {
+					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
+					modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user **spammed mentions**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
+					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
+					throw new Error(err);
+				});
+			return;
+		}
+
+		if (message.content.startsWith('!!')) {
 			let keyword: string = message.content.split(' ')[0];
 			let mentions: string = '';
 			if (message.mentions) {
