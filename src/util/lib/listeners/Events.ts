@@ -328,25 +328,25 @@ export class Events {
 					throw new Error(err);
 				});
 			return;
-		} 
-		if(message.mentions.users.keyArray().length > 5) {
-			if(message.member.roles.get("302255737302679552") || message.member.roles.get("157728857263308800")) return;
+		}
+		if (message.mentions.users.keyArray().length > 5) {
+			if (message.member.roles.get('302255737302679552') || message.member.roles.get('157728857263308800')) return;
 			message.delete();
 			message.channel.send(`<@${message.author.id}>, do not mass-mention users.`);
-			
+
 			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
-			const msgChannel: TextChannel = <TextChannel> message.channel; 
+			const msgChannel: TextChannel = <TextChannel> message.channel;
 			const embed: RichEmbed = new RichEmbed()
 				.setColor(Constants.warnEmbedColor)
 				.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
 				.setDescription(`**Action:** Message Deleted\n`
 					+ `**Reason:** Mention spam\n`
-					+ "**Channel:** " + msgChannel.name + ` (<#${message.channel.id}>)` + "\n"
+					+ '**Channel:** ' + msgChannel.name + ` (<#${message.channel.id}>)` + '\n'
 					+ `**Message:** (${message.id})\n\n`
 					+ `${message.cleanContent}`)
 				.setTimestamp();
 			logChannel.send({ embed: embed });
-			
+
 			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Do not spam mentions."`)
 			.then((res) => {
 				this._client.database.commands.warn.addWarn(message.guild.id, this._client.user.id, message.member.user.id, 'Warned: Mention spam.');
