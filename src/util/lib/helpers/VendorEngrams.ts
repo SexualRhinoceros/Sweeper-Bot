@@ -22,11 +22,11 @@ export class VendorEngramManager {
 			try {
 				let _this: VendorEngramManager = this;
 
-				await Schedule.scheduleJob('5 * * * *', async function() {
+				await Schedule.scheduleJob('10 * * * *', async function() {
 					await _this.getVendorData(channel);
 				});
 
-				await Schedule.scheduleJob('35 * * * *', async function() {
+				await Schedule.scheduleJob('40 * * * *', async function() {
 					await _this.getVendorData(channel);
 				});
 			}
