@@ -45,7 +45,7 @@ export class VendorEngramManager {
 				{
 					const vendorName: string = Constants.vendorEngramsVendors[vendor.vendor].name;
 					const vendorLocation: string = Constants.vendorEngramsVendors[vendor.vendor].location;
-					channel.send(`The following gear is likely available at 300 Power Level (for next ~25 minutes):\n\n`
+					channel.send(`The following gear is likely available at 300 Power Level (for next ~20 minutes):\n\n`
 								+ `**POTENTIAL GEAR:** ${vendorName}\n`
 								+ `**LOCATION:** ${vendorLocation}\n\n`
 								+ `Data provided by: <https://VendorEngrams.xyz>`);
