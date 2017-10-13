@@ -2,6 +2,7 @@ import { Client, ListenerUtil, Logger, logger } from 'yamdbf';
 import { TextChannel, RichEmbed, Message, Guild, GuildMember, VoiceChannel } from 'discord.js';
 import { Events } from './listeners/Events';
 import { RoleManager } from './assignment/RoleManager';
+import { VendorEngramManager } from './helpers/VendorEngrams';
 import { ModLoader } from '../lib/mod/ModLoader';
 import VoiceChannelManager from './voice/VoiceChannelManager';
 import Database from '../../database/Database';
@@ -21,6 +22,7 @@ export class SweeperClient extends Client {
 	public database: Database;
 	public mod: ModLoader;
 	public voiceChannelManager: VoiceChannelManager;
+	public vendorEngramManager: VendorEngramManager;
 
 	// constructor
 	public constructor() {
@@ -55,6 +57,7 @@ export class SweeperClient extends Client {
 		this.roleManager = new RoleManager(this);
 		this.mod = new ModLoader(this);
 		this.voiceChannelManager = new VoiceChannelManager(this);
+		this.vendorEngramManager = new VendorEngramManager(this);
 	}
 
 	@once('pause')
@@ -72,6 +75,8 @@ export class SweeperClient extends Client {
 		this.logger.info('CORE', `Connected to: RoleManager`);
 		await this.voiceChannelManager.init();
 		this.logger.info('CORE', `Connected to: VoiceChannelManager`);
+		await this.vendorEngramManager.init();
+		this.logger.info('CORE', `Connected to: VendorEngramManager`);
 
 		try {
 			for (let [channelID, chanObj] of this.channels.filter(chan => chan.type === 'text')) {
