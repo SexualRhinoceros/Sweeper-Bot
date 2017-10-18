@@ -386,10 +386,10 @@ export class Events {
 										`\n\n` +
 										`Please note the following planned Destiny maintenance event(s).` +
 										`\n\n` +
-										`__**Wednesday October 11th, 2017 [2017-10-11]**__\n` +
+										`__**Wednesday October 19th, 2017 [2017-10-19]**__\n` +
 										`**STARTS:** 8 AM PDT (3 PM UTC) \n` +
-										`**ENDS:** 2 PM PDT (9 PM UTC) \n` +
-										`**NO DOWNTIME IS EXPECTED. Details:** <https://twitter.com/bungiehelp/status/917824850835628032>` +
+										`**ENDS:** 12 PM PDT (7 PM UTC) \n` +
+										`**Details:** <https://twitter.com/BungieHelp/status/920786039303675904>` +
 										`\n\n` +
 										`Note: Maintenance times, including end time, are subject to change by Bungie without notice. For more info see @BungieHelp on Twitter or https://www.bungie.net/en/Help/Article/13125 Thank you.`);
 					return;
