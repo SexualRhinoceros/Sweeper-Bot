@@ -70,7 +70,7 @@ Constants.baseVoiceChannelIdTwo = config.ServerData.baseVoiceChannelIdTwo;
 Constants.baseVoiceChannelIdThree = config.ServerData.baseVoiceChannelIdThree;
 Constants.whitelistedChannels = ['255099898897104908', '323564629139652619', '361987348705312788', '322490463770640385',
 								'342111927788634114', '297866918839451651', '322492361861103616', '332354014903664641',
-								'368940297876668427', '369952267975000081', '360193326365933599'];
+								'368940297876668427', '369952267975000081', '360193326365933599', '370065490065883137'];
 
 // API Data
 Constants.vendorEngramsAPIBase = 'https://api.vendorengrams.xyz/getVendorDrops?key=';
