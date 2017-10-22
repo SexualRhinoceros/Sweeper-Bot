@@ -288,69 +288,25 @@ export class Events {
 		if (message.channel.type !== 'text') return;
 		const msgChannel: TextChannel = <TextChannel> message.channel;
 
+		// Discord invite link spam
 		if (Constants.discordInviteRegExp.test(message.content)) {
-			if (message.member.hasPermission('MANAGE_MESSAGES')) return;
-			message.delete();
-
-			const regexMatch = Constants.discordInviteRegExp.exec(message.content);
-			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
-			const embed: RichEmbed = new RichEmbed()
-				.setColor(Constants.warnEmbedColor)
-				.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
-				.setDescription(`**Action:** Message Deleted\n`
-					+ `**Reason:** Discord Invites Blacklisted\n`
-					+ `**Match:** ${regexMatch}\n`
-					+ `**Channel:** #${msgChannel.name} (${message.channel.id})\n`
-					+ `**Message:** (${message.id})\n\n`
-					+ `${message.cleanContent}`)
-				.setTimestamp();
-			logChannel.send({ embed: embed });
-
-			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Discord invite links are not permitted."`)
-				.then((res) => {
-					// Inform in chat that the warn was success, wait a few sec then delete that success msg
-					this._client.database.commands.warn.addWarn(message.guild.id, this._client.user.id, message.member.user.id, 'Warned: Discord Invite Link');
-					this.logger.log('Events Warn', `Warned user (Discord Invite): '${message.member.user.tag}' in '${message.guild.name}'`);
-				})
-				.catch((err) => {
-					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
-					modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user posted a **Discord Invite Link**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
-					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
-					throw new Error(err);
-				});
+			this._client.mod.helpers.antispamDiscordInvites(message, msgChannel);
 			return;
 		}
 
+		// Mess mention spam
 		if (message.mentions.users.keyArray().length > 5) {
-			if (message.member.hasPermission('MANAGE_MESSAGES')) return;
-			message.delete();
-
-			const logChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.logChannelId);
-			const embed: RichEmbed = new RichEmbed()
-				.setColor(Constants.warnEmbedColor)
-				.setAuthor(`${message.member.user.tag} (${message.member.id})`, message.member.user.avatarURL)
-				.setDescription(`**Action:** Message Deleted\n`
-					+ `**Reason:** Mention spam\n`
-					+ `**Channel:** ${msgChannel.name} (${message.channel.id}) \n`
-					+ `**Message:** (${message.id})\n\n`
-					+ `${message.cleanContent}`)
-				.setTimestamp();
-			logChannel.send({ embed: embed });
-
-			await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Do not spam mentions. This includes mentioning a lot of users at once."`)
-				.then((res) => {
-					this._client.database.commands.warn.addWarn(message.guild.id, this._client.user.id, message.member.user.id, 'Warned: Mention spam.');
-					this.logger.log('Events Warn', `Warned user (Mention Spam): '${message.member.user.tag}' in '${message.guild.name}'`);
-				})
-				.catch((err) => {
-					const modChannel: TextChannel = <TextChannel> message.guild.channels.get(Constants.modChannelId);
-					modChannel.send(`There was an error informing ${message.member.user.tag} (${message.member.user.id}) of their warning (automatically). This user **spammed mentions**. Their DMs may be disabled.\n\n**Error:**\n${err}`);
-					this.logger.log('Events Warn', `Unable to warn user: '${message.member.user.tag}' in '${message.guild.name}'`);
-					throw new Error(err);
-				});
+			this._client.mod.helpers.antispamMassMentions(message, msgChannel);
 			return;
 		}
 
+		// Twitch link spam
+		if (Constants.twitchRegExp.test(message.content)) {
+			this._client.mod.helpers.antispamTwitchLinks(message, msgChannel);
+			return;
+		}
+
+		// Call response commands
 		if (message.content.startsWith('!!')) {
 			let keyword: string = message.content.split(' ')[0];
 			let mentions: string = '';

@@ -1,4 +1,4 @@
-import { GuildMember, Guild, RichEmbed, User, TextChannel } from 'discord.js';
+import { GuildMember, Guild, RichEmbed, Role, User, TextChannel } from 'discord.js';
 import { GuildStorage, Logger, logger } from 'yamdbf';
 import { SweeperClient } from '../SweeperClient';
 import Constants from '../../Constants';
@@ -21,6 +21,11 @@ export class Actions
 	public async mute(gmUser: GuildMember, issuer: GuildMember, guild: Guild, actionlength: string, note: string): Promise<void>
 	{
 		const storage: GuildStorage = this._client.storage.guilds.get(guild.id);
+
+		// Remove all roles so they can't view anything except the muted channels we want them to see.
+		gmUser.removeRoles(gmUser.roles);
+		this.logger.log('Actions', `Mute - Removed all roles for '${gmUser.user.tag}' in '${guild.name}.`);
+
 		await gmUser.addRoles([guild.roles.get(await storage.settings.get('mutedrole'))])
 			.then(result => {
 				this.logger.log('Actions', `Mute - Added role to '${gmUser.user.tag}' in '${guild.name}.`);

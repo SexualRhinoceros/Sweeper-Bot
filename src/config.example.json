@@ -10,8 +10,13 @@
 		"modChannelId": "Channel ID",
 		"logChannelId": "Channel ID",
 		"botDMServerId": "Separate Server ID",
+		"destiny2ChanId": "Channel ID",
 		"baseVoiceChannelIdOne": "Channel ID",
 		"baseVoiceChannelIdTwo": "Channel ID",
-		"baseVoiceChannelIdThree": "Channel ID"
+		"baseVoiceChannelIdThree": "Channel ID",
+		"antispamBypassId": "Role ID"
+	},
+	"APIKeys": {
+		"VendorEngramsXYZ": "Get Key From vendorengrams.xyz"
 	}
 }

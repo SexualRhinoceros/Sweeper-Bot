@@ -3,6 +3,7 @@ import { GuildMember, Guild } from 'discord.js';
 import { MuteManager } from './managers/MuteManager';
 import { SweeperClient } from '../SweeperClient';
 import { Actions } from './Actions';
+import { Helpers } from '../helpers/Helpers';
 
 /**
  * Handles loading the different moderation controllers
@@ -14,6 +15,7 @@ export class ModLoader
 	private _client: SweeperClient;
 
 	public actions: Actions;
+	public helpers: Helpers;
 
 	public managers: {
 		mute: MuteManager
@@ -24,6 +26,7 @@ export class ModLoader
 		this._client = client;
 
 		this.actions = new Actions(this._client);
+		this.helpers = new Helpers(this._client);
 
 		this.managers = {
 			mute: new MuteManager(this._client)
