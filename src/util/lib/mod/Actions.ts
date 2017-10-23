@@ -181,7 +181,7 @@ export class Actions
 											noteText.substring(0, length - 3) + '...' :
 											noteText;
 						noteDate = moment(value.createdAt).format('lll');
-						embed.addField(`[${value.actiontype}] ${value.id} - ${noteDate}`, `"${value.note}" - <@${value.modid}>`, false);
+						embed.addField(`[${value.actiontype}] ${value.id} - ${noteDate}`, `"${trimmedNote}" - <@${value.modid}>`, false);
 					});
 				}
 
