@@ -64,7 +64,7 @@ export class Helpers
 	public async antispamTwitchLinks(message: Message, msgChannel: TextChannel): Promise<void>
 	{
 		if (message.member.hasPermission('MANAGE_MESSAGES') || message.member.roles.exists('id', Constants.antispamBypassId)) return;
-		if (message.content.includes('twitch.tv/bungie') || message.content.includes('twitch.tv\\bungie')) return;
+		if (message.content.includes('twitch.tv/bungie') || message.content.includes('twitch.tv\\bungie' || message.content.includes('clips.twitch.tv'))) return;
 		message.delete();
 		const antispamType: string = 'Twitch Links Blacklisted';
 
