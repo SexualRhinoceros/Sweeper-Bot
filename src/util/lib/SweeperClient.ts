@@ -46,7 +46,8 @@ export class SweeperClient extends Client {
 				plugins: [dmManager(config.ServerData.botDMServerId)]
 			},
 			{
-				messageCacheMaxSize: 500
+				messageCacheMaxSize: 2000,
+				fetchAllMembers: true
 			});
 
 		this.config = config;
