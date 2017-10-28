@@ -111,7 +111,7 @@ Constants.NMEmoji = '<:nm:247889245421699082>';
 
 Constants.serverInvite = 'https://discord.gg/DestinyReddit';
 Constants.appealsServer = 'https://discord.gg/r9w8EfP';
-Constants.channelNames = ['Adonna', 'Agah', 'Agema', 'Aiat', 'Aksor', 'Alak-Hul', 'AlakHul', 'Alzok', 'Amanda Holliday', 'Amytis',
+Constants.channelNames = ['Adonna', 'Agah', 'Agema', 'Aiat', 'Aksor', 'Alak-Hul', 'Alzok', 'Amanda Holliday', 'Amytis', 'Murmur',
 	'Ana Bray', 'Andal', 'Arach Jalaal', 'Aral', 'Arath', 'ArchonSlayer', 'Ascendant Raisins', 'Aurash', 'Auryx', 'Azzir', 'Baby Dog',
 	'Bamberga', 'Baxx', 'Bekhterev', 'Beltrik', 'Bracus', 'Bracuses', 'Brask', 'Brevin', 'Brother Vance', 'Bryl', 'Caedometric',
 	'Calus', 'Carybdis', 'Celery', 'Charlemagne', 'Chioma', 'Chiomas', 'Citan', 'Colovance', 'Cozmo-23', 'Cryptarch', 'Crytparch',
@@ -134,7 +134,8 @@ Constants.channelNames = ['Adonna', 'Agah', 'Agema', 'Aiat', 'Aksor', 'Alak-Hul'
 	'Veliniks', 'Velor', 'Venj', 'Vestan', 'Vestian', 'Virixas', 'Vorlog', 'Warmind', 'Warminds', 'Warpriest', 'Warsat', 'Wei Ning',
 	'Weksis', 'Wintership', 'WorldRender', 'Wormfood', 'Xander 99-40', 'Xivu', 'Xol', 'Xur', 'Xyor', 'Yavek', 'Zarin', 'Zhalo', 'Zire',
 	'Zydron', 'Zyre', 'Zyrok', 'Fallen', 'Taken', 'Cabal', 'Vex', 'Harpy', 'Dreg', 'Vandal', 'Hunter', 'Titan', 'Warlock', 'Ogre',
-	'Acolyte', 'Thrall', 'M\'Orn', 'Ta\'Aurc', 'B\'Ael', 'Aru\'Un', 'Tho\'Ourg', 'Va\'Ase'];
+	'Acolyte', 'Thrall', 'M\'Orn', 'Ta\'Aurc', 'B\'Ael', 'Aru\'Un', 'Tho\'Ourg', 'Va\'Ase', 'Louis', 'EDZ', 'Nessus', 'Io',
+	'Dawnblade', 'Stormcaller', 'Voidwalker', 'Arcstrider', 'Gunslinger', 'Nightstalker', 'Striker', 'Sentinel', 'Sunbreaker'];
 
 Constants.footer = `\n\n**Special Note:** If you reply to this message it will be sent to the moderator team. If you are unable to reply to the bot, please check that you have not blocked the bot, disabled server messages, and share a server with the bot. If you do not share a server with the bot, you may join this one: ${Constants.appealsServer}.`;
 export default Constants;

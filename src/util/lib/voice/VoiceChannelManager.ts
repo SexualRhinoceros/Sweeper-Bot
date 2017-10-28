@@ -48,12 +48,15 @@ export default class VoiceChannelManager {
 		do { channelName = this.getChannelName(); }
 		while (currentChannelNames.indexOf(channelName) !== -1);
 
-		let newChannel: VoiceChannel = await baseChannelOne.clone(channelName, true, true) as VoiceChannel;
-
-		await newChannel.setPosition(0);
-		await newChannel.setUserLimit(fireTeamSize);
-
-		this.logger.log('VoiceChannelManager', `Created Voice Channel: ${channelName}.`);
+		let newChannel: VoiceChannel;
+		try {
+			newChannel = await baseChannelOne.clone(channelName, true, true) as VoiceChannel;
+			await newChannel.edit({position: 0, userLimit: 6, bitrate: 64000});
+			this.logger.info('VoiceChannelManager', `Created Voice Channel: ${channelName}.`);
+		}
+		catch (err) {
+			this.logger.error(err);
+		}
 	}
 
 	public getChannelsForDeletion(guild: Guild): Collection<string, GuildChannel> {
