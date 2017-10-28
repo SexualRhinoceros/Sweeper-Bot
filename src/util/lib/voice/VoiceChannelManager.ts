@@ -32,7 +32,7 @@ export default class VoiceChannelManager {
 		let channelsForDeletion: Array<VoiceChannel> = this.getChannelsForDeletion(guild).map((channel: VoiceChannel) => { return channel; });
 
 		for (let x: number = 0; x < channelsForDeletion.length; x++) {
-			if (emptyChannels.length > 3) {
+			if (emptyChannels.length > 6) {
 				await channelsForDeletion[x].delete();
 				this.logger.log('VoiceChannelManager', `Deleted Voice Channel: ${channelsForDeletion[x].name}.`);
 			}
