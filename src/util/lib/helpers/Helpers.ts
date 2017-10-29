@@ -19,14 +19,14 @@ export class Helpers
 		const antispamType: string = 'Discord Invites Blacklisted';
 		const regexMatch: string = Constants.discordInviteRegExp.exec(message.content)[0];
 		const regexInviteCode: string = Constants.discordInviteCodeRegExp.exec(regexMatch)[1];
-		let invites: Collection<string, Invite> = await message.guild.fetchInvites().then(invites => invites);
+		let discordInvites: Collection<string, Invite> = await message.guild.fetchInvites().then(invites => invites);
 
 		if (message.member.hasPermission('MANAGE_MESSAGES') || message.member.roles.exists('id', Constants.antispamBypassId)) return;
-		if (regexInviteCode && invites) {
-			let inviteCodes = invites.map(invite => invite.code);
+		if (regexInviteCode && discordInvites) {
+			let inviteCodes = discordInvites.map(invite => invite.code);
 			if (inviteCodes.includes(regexInviteCode))
 				return;
-		};
+		}
 
 		message.delete();
 		this.logMessage(message, msgChannel, regexMatch, antispamType);
