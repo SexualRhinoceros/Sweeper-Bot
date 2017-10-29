@@ -52,11 +52,11 @@ export default class VoiceChannelManager {
 
 		try {
 			newChannel = await baseChannelOne.clone(channelName, true, true) as VoiceChannel;
-			data: {
-				bitrate: '64000',
-				user_limit: '6',
-				id: 'newChannel.id',
-                        	parent_id: '355887285281226762'
+			var data = {
+				bitrate: "64000",
+				user_limit: "6",
+				id: newChannel.id,
+                        	parent_id: "355887285281226762"
 			};
 			await this.client.rest.makeRequest('patch', Endpoints.Guild(guild).channels, true, data, undefined, reason).then(newData => this.client.actions.ChannelUpdate.handle(newData).updated);
 			this.logger.info('VoiceChannelManager', `Created Voice Channel: ${channelName}.`);
