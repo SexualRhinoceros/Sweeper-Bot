@@ -48,7 +48,7 @@ export default class VoiceChannelManager {
 		do { channelName = this.getChannelName(); }
 		while (currentChannelNames.indexOf(channelName) !== -1);
 
-		let newChannel: VoiceChannel;\
+		let newChannel: VoiceChannel;
 		
 		try {
 			newChannel = await baseChannelOne.clone(channelName, true, true) as VoiceChannel;
