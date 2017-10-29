@@ -55,7 +55,7 @@ export default class VoiceChannelManager {
 			data: {
 				bitrate: '64000',
 				user_limit: '6',
-				id: 'newChannel.id'
+				id: 'newChannel.id',
                         	parent_id: '355887285281226762'
 			},
 			await this.client.rest.makeRequest('patch', Endpoints.Guild(guild).channels, true, data, undefined, reason).then(newData => this.client.actions.ChannelUpdate.handle(newData).updated);
