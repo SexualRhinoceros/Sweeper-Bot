@@ -1,4 +1,4 @@
-import { Collection, Guild, GuildChannel, GuildMember, VoiceChannel } from 'discord.js';
+import { Collection, Guild, Endpoints, GuildChannel, GuildMember, VoiceChannel } from 'discord.js';
 import { GuildStorage, ListenerUtil, Logger, logger } from 'yamdbf';
 import { SweeperClient } from '../SweeperClient';
 import Constants from '../../Constants';
@@ -48,10 +48,17 @@ export default class VoiceChannelManager {
 		do { channelName = this.getChannelName(); }
 		while (currentChannelNames.indexOf(channelName) !== -1);
 
-		let newChannel: VoiceChannel;
+		let newChannel: VoiceChannel;\
+		
 		try {
 			newChannel = await baseChannelOne.clone(channelName, true, true) as VoiceChannel;
-			await newChannel.edit({position: 0, userLimit: 6, bitrate: 64000});
+			data: {
+				bitrate: '64000',
+				user_limit: '6',
+				id: 'newChannel.id'
+                        	parent_id: '355887285281226762'
+			},
+			await this.client.rest.makeRequest('patch', Endpoints.Guild(guild).channels, true, data, undefined, reason).then(newData => this.client.actions.ChannelUpdate.handle(newData).updated);
 			this.logger.info('VoiceChannelManager', `Created Voice Channel: ${channelName}.`);
 		}
 		catch (err) {
