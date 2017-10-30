@@ -1,4 +1,4 @@
-import { GuildMember, Guild, Message, RichEmbed, Role, User, TextChannel } from 'discord.js';
+import { Collection, GuildMember, Guild, Invite, Message, RichEmbed, Role, User, TextChannel } from 'discord.js';
 import { GuildStorage, Logger, logger } from 'yamdbf';
 import { SweeperClient } from '../SweeperClient';
 import Constants from '../../Constants';
@@ -16,11 +16,19 @@ export class Helpers
 	// Antispam - Discord Invite Links
 	public async antispamDiscordInvites(message: Message, msgChannel: TextChannel): Promise<void>
 	{
-		if (message.member.hasPermission('MANAGE_MESSAGES') || message.member.roles.exists('id', Constants.antispamBypassId)) return;
-		message.delete();
 		const antispamType: string = 'Discord Invites Blacklisted';
-
 		const regexMatch: string = Constants.discordInviteRegExp.exec(message.content)[0];
+		const regexInviteCode: string = Constants.discordInviteCodeRegExp.exec(regexMatch)[1];
+		let discordInvites: Collection<string, Invite> = await message.guild.fetchInvites().then(invites => invites);
+
+		if (message.member.hasPermission('MANAGE_MESSAGES') || message.member.roles.exists('id', Constants.antispamBypassId)) return;
+		if (regexInviteCode && discordInvites) {
+			let inviteCodes = discordInvites.map(invite => invite.code);
+			if (inviteCodes.includes(regexInviteCode))
+				return;
+		}
+
+		message.delete();
 		this.logMessage(message, msgChannel, regexMatch, antispamType);
 
 		await message.member.user.send(`You have been warned on **${message.guild.name}**.\n\n**A message from the mods:**\n\n"Discord invite links are not permitted."`)

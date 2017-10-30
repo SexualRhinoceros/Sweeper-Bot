@@ -26,6 +26,7 @@ export type BotConstants = {
 	psRegExp: RegExp;
 	xbRegExp: RegExp;
 	discordInviteRegExp: RegExp;
+	discordInviteCodeRegExp: RegExp;
 	twitchRegExp: RegExp;
 
 	// Embed color
@@ -86,6 +87,7 @@ Constants.pcRegExp = new RegExp('([A-Za-z0-9\-\_\#]{3,16})', 'i');
 Constants.psRegExp = new RegExp('([A-Za-z0-9\-\_]{3,16})', 'i');
 Constants.xbRegExp = new RegExp('(?:.me\\sset\\sxb|.me\\sset\\sxbl|.me\\sset\\sxbox)\\s([A-Za-z0-9\-\_\\s]{1,15})', 'i');
 Constants.discordInviteRegExp = new RegExp(/discord(?:app\.com|\.gg|\.me)\/(?:invite\/)?(?![a-zA-Z0-9\-]+\/\w)(?:[a-zA-Z0-9\-]+)/, 'i');
+Constants.discordInviteCodeRegExp = new RegExp(/\/(.*)/, 'i');
 Constants.twitchRegExp = new RegExp(/twitch\.tv(\\|\/).+/, 'i');
 
 // Embed color
