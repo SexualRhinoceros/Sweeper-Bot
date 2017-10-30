@@ -1,3 +1,5 @@
+const snekfetch = require('snekfetch');
+
 import { Collection, Guild, Endpoints, GuildChannel, GuildMember, VoiceChannel } from 'discord.js';
 import { GuildStorage, ListenerUtil, Logger, logger } from 'yamdbf';
 import { SweeperClient } from '../SweeperClient';
@@ -52,20 +54,26 @@ export default class VoiceChannelManager {
 
 		try {
 			newChannel = await baseChannelOne.clone(channelName, true, true) as VoiceChannel;
-			var data = {
-				bitrate: '64000',
-				user_limit: '6',
-				id: newChannel.id,
-				parent_id: '355887285281226762'
-			};
-			await this.client.rest.makeRequest('patch', Endpoints.Guild(guild).channels, true, data, undefined, reason).then(newData => this.client.actions.ChannelUpdate.handle(newData).updated);
+			this.createChannelInsideCategory(newChannel);
 			this.logger.info('VoiceChannelManager', `Created Voice Channel: ${channelName}.`);
 		}
 		catch (err) {
 			this.logger.error(err);
 		}
 	}
-
+	
+	public createChannelInsideCategory(channel: Channel) {
+		var data = {
+			bitrate: '64000',
+			user_limit: '6',
+			id: channel.id,
+			parent_id: '355887285281226762'
+			};
+		const request = snekfetch['patch']('https://discordapp.com/api/v6/guilds/157728722999443456/channels');
+		request.set('Authorization', `Bot ${this.client.token}`)
+		request.send(data);
+	}
+	
 	public getChannelsForDeletion(guild: Guild): Collection<string, GuildChannel> {
 		return guild.channels.filter((channel: VoiceChannel, key: string, collection: Collection<string, VoiceChannel>) => {
 			return (
