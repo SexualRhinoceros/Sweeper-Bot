@@ -61,7 +61,7 @@ export default class VoiceChannelManager {
 			this.logger.error(err);
 		}
 	}
-	
+
 	public createChannelInsideCategory(channel: Channel) {
 		var data = {
 			bitrate: '64000',
@@ -70,10 +70,10 @@ export default class VoiceChannelManager {
 			parent_id: '355887285281226762'
 			};
 		const request = snekfetch['patch']('https://discordapp.com/api/v6/guilds/157728722999443456/channels');
-		request.set('Authorization', `Bot ${this.client.token}`)
+		request.set('Authorization', `Bot ${this.client.token}`);
 		request.send(data);
 	}
-	
+
 	public getChannelsForDeletion(guild: Guild): Collection<string, GuildChannel> {
 		return guild.channels.filter((channel: VoiceChannel, key: string, collection: Collection<string, VoiceChannel>) => {
 			return (
