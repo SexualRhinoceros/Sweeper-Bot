@@ -1,6 +1,6 @@
 const snekfetch = require('snekfetch');
 
-import { Collection, Guild, Endpoints, GuildChannel, GuildMember, VoiceChannel } from 'discord.js';
+import { Collection, Guild, GuildChannel, GuildMember, VoiceChannel } from 'discord.js';
 import { GuildStorage, ListenerUtil, Logger, logger } from 'yamdbf';
 import { SweeperClient } from '../SweeperClient';
 import Constants from '../../Constants';
